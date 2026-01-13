@@ -11,8 +11,8 @@ export default function Navigation() {
       <div className="container">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 border-2 border-primary bg-card flex items-center justify-center neon-border transition-all duration-300 group-hover:scale-110">
-              <span className="text-2xl font-display text-primary neon-glow">CD</span>
+            <div className="w-20 h-20 border-2 border-primary bg-card flex items-center justify-center neon-border transition-all duration-300 group-hover:scale-110 overflow-hidden rounded">
+              <img src="/images/casey-profile.jpg" alt="Casey Dean" className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-display text-foreground tracking-wider">
