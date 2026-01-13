@@ -62,7 +62,7 @@ export default function Footer() {
             </h3>
             <div className="flex gap-4">
               <a 
-                href="https://github.com/caseydean" 
+                href="https://github.com/caseyrdean" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-12 h-12 border border-primary/30 bg-background flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
@@ -70,7 +70,7 @@ export default function Footer() {
                 <Github className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </a>
               <a 
-                href="https://linkedin.com/in/caseydean" 
+                href="https://linkedin.com/in/caseyrdean" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-12 h-12 border border-primary/30 bg-background flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
