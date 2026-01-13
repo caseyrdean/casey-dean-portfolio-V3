@@ -58,24 +58,22 @@ export default function Home() {
               </p>
               
               <div className="flex flex-wrap gap-4 pt-4">
-                <a href="#projects">
-                  <Button 
-                    size="lg" 
-                    className="font-subhead tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary neon-border group"
-                  >
-                    VIEW PROJECTS
-                    <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </a>
-                <a href="#contact">
-                  <Button 
-                    size="lg" 
-                    variant="outline"
-                    className="font-subhead tracking-wider border-2 border-secondary text-secondary hover:bg-secondary/10"
-                  >
-                    GET IN TOUCH
-                  </Button>
-                </a>
+                <Button 
+                  size="lg" 
+                  className="font-subhead tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary neon-border group"
+                  onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  VIEW PROJECTS
+                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="font-subhead tracking-wider border-2 border-secondary text-secondary hover:bg-secondary/10"
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  GET IN TOUCH
+                </Button>
               </div>
             </div>
           </div>
@@ -105,8 +103,7 @@ export default function Home() {
           {/* Project Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
-              <Link key={project.id} href={`/project/${project.slug}`}>
-                <a className="group block relative overflow-hidden border border-primary/30 bg-card hover:border-primary transition-all duration-500">
+              <Link key={project.id} href={`/project/${project.slug}`} className="group block relative overflow-hidden border border-primary/30 bg-card hover:border-primary transition-all duration-500">
                   {/* Project Image */}
                   <div className="relative aspect-video overflow-hidden">
                     <img 
@@ -150,7 +147,6 @@ export default function Home() {
                   
                   {/* Neon accent line */}
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                </a>
               </Link>
             ))}
           </div>

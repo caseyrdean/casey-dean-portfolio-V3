@@ -40,11 +40,9 @@ export default function ProjectDetail() {
         
         {/* Content */}
         <div className="container relative z-10 pb-16">
-          <Link href="/">
-            <a className="inline-flex items-center gap-2 text-sm font-subhead tracking-wider text-primary hover:text-primary/80 transition-colors mb-8 group">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              BACK TO PROJECTS
-            </a>
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-subhead tracking-wider text-primary hover:text-primary/80 transition-colors mb-8 group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            BACK TO PROJECTS
           </Link>
           
           <div className="max-w-4xl space-y-6">
@@ -161,14 +159,17 @@ export default function ProjectDetail() {
             
             {/* Navigation */}
             <div className="flex justify-center pt-8">
-              <Link href="/">
+              <Link href="/" className="inline-block">
                 <Button 
                   variant="outline"
                   size="lg"
                   className="font-subhead tracking-wider border-2 border-secondary text-secondary hover:bg-secondary/10"
+                  asChild
                 >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  BACK TO ALL PROJECTS
+                  <span>
+                    <ArrowLeft className="w-5 h-5 mr-2" />
+                    BACK TO ALL PROJECTS
+                  </span>
                 </Button>
               </Link>
             </div>
