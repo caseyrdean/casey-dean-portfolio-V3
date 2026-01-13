@@ -221,7 +221,7 @@ export default function Home() {
               {[
                 {
                   year: "06/2024 - Present",
-                  title: "Lead Solutions Architect",
+                  title: "Solutions Consultant and COE Lead",
                   company: "Jaggaer",
                   type: "Current",
                   summary: "Translating complex business requirements into scalable, secure system designs across discovery, configuration, deployment, and post-go-live transition. Acting as primary architectural advisor to client stakeholders, guiding trade-off decisions across functionality, integrations, and compliance constraints."
