@@ -5,11 +5,19 @@
 
 import { Github, Linkedin, Mail } from "lucide-react";
 
-// HuggingFace SVG Icon Component
+// HuggingFace SVG Icon Component - Official HuggingFace logo style
 function HuggingFaceIcon() {
   return (
     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 22c-5.52 0-10-4.48-10-10S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 10 15.5 10 14 10.67 14 11.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 10 8.5 10 7 10.67 7 11.5 7.67 13 8.5 13zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+      {/* HuggingFace mascot - two rounded shapes representing hugging faces */}
+      <g>
+        {/* Left face */}
+        <circle cx="7" cy="10" r="4.5" fill="currentColor" opacity="0.8"/>
+        {/* Right face */}
+        <circle cx="17" cy="10" r="4.5" fill="currentColor" opacity="0.8"/>
+        {/* Heart/hug symbol in center */}
+        <path d="M12 14 Q10 16 8 16 Q6 16 6 14 Q6 12 8 12 Q10 11 12 13 Q14 11 16 12 Q18 12 18 14 Q18 16 16 16 Q14 16 12 14" fill="currentColor"/>
+      </g>
     </svg>
   );
 }
