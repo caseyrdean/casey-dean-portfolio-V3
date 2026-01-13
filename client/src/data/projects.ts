@@ -1,5 +1,5 @@
 /* Design Philosophy: Neon Apocalypse - Project data structure
- * Contains case study information for AWS architecture projects
+ * Contains case study information based on Casey Dean's actual experience
  */
 
 export interface Project {
@@ -21,129 +21,107 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: "1",
-    slug: "enterprise-cloud-migration",
-    title: "Enterprise Cloud Migration",
-    subtitle: "Legacy to AWS Transformation",
-    category: "Migration",
-    image: "/images/project-cloud-migration.png",
-    description: "Led the migration of a Fortune 500 company's entire infrastructure from on-premises data centers to AWS, reducing operational costs by 40% while improving system reliability and scalability.",
-    challenge: "The client operated 200+ legacy servers across three data centers with complex interdependencies, zero-downtime requirements, and strict compliance mandates. The existing architecture was monolithic, making incremental migration extremely challenging.",
-    solution: "Designed a phased migration strategy using AWS Migration Hub, Database Migration Service, and Application Migration Service. Implemented a hybrid cloud architecture during transition, leveraging AWS Direct Connect for secure connectivity. Refactored critical applications to microservices architecture using ECS and Lambda, while lift-and-shifting stable workloads to EC2 with Auto Scaling Groups.",
+    slug: "ai-agent-platform",
+    title: "AI Agent Platform Architecture",
+    subtitle: "Autonomous AI Solutions Design",
+    category: "AI Solutions",
+    image: "/images/project-serverless.png",
+    description: "Lead Solutions Architect for AI-powered autonomous agent platform at Manus AI, translating complex business requirements into scalable, secure system designs across discovery, configuration, deployment, and post-go-live transition.",
+    challenge: "Design and implement scalable architecture for an AI agent platform requiring complex integrations, data models, and compliance constraints while ensuring long-term extensibility and sustainable, supportable solutions for diverse client stakeholders.",
+    solution: "Acted as primary architectural advisor to client stakeholders, guiding trade-off decisions across functionality, integrations, data models, compliance constraints, and long-term extensibility. Designed future-state architectures and workflows within Statement of Work boundaries, proactively identifying technical and operational risks related to integrations, data integrity, and adoption, mitigating them prior to production rollout.",
     results: [
-      "40% reduction in infrastructure costs within first year",
-      "99.99% uptime achieved across all migrated services",
-      "Zero data loss during migration process",
-      "50% improvement in deployment velocity",
-      "Achieved SOC 2 and HIPAA compliance in AWS environment"
+      "Successfully bridged business, engineering, and support teams through comprehensive documentation",
+      "Preserved architectural intent through implementation to operational handoff",
+      "Enabled smooth transitions by documenting system workflows and configuration rationale",
+      "Proactively identified and mitigated risks prior to production rollout"
     ],
     technologies: [
-      "AWS Migration Hub",
-      "DMS",
-      "Application Migration Service",
-      "EC2",
-      "ECS",
+      "AWS",
+      "AI/ML",
+      "Serverless",
+      "API Gateway",
       "Lambda",
-      "Direct Connect",
-      "CloudFormation",
-      "Systems Manager"
+      "System Design",
+      "Solution Architecture"
     ],
-    downloadUrl: "/documents/enterprise-migration-architecture.pdf"
+    downloadUrl: "/documents/ai-platform-architecture.pdf"
   },
   {
     id: "2",
-    slug: "serverless-data-pipeline",
-    title: "Serverless Data Pipeline",
-    subtitle: "Real-time Analytics at Scale",
-    category: "Data Engineering",
-    image: "/images/project-serverless.png",
-    description: "Architected a fully serverless data processing pipeline handling 10 million events per day, enabling real-time analytics and machine learning insights for a fintech startup.",
-    challenge: "The client needed to process massive volumes of financial transaction data in real-time, perform fraud detection, generate analytics dashboards, and maintain strict data governance—all while keeping costs predictable and scaling automatically with demand.",
-    solution: "Built an event-driven architecture using API Gateway, Lambda, Kinesis Data Streams, and Kinesis Firehose for ingestion. Implemented real-time processing with Lambda and Step Functions for orchestration. Used S3 for data lake storage with Glue for ETL, Athena for ad-hoc queries, and QuickSight for visualization. Integrated SageMaker for ML-based fraud detection models.",
+    slug: "dod-fedramp-solutions",
+    title: "DoD FedRAMP Solutions",
+    subtitle: "Federal Portfolio Management",
+    category: "Security & Compliance",
+    image: "/images/project-security.png",
+    description: "Delivered 12 sensitive Department of Defense solutions at Sopheon, guiding secure, compliance-focused technical decisions and aligning architectures with mission goals and FedRAMP standards across $15M+ ARR in federal contracts.",
+    challenge: "Design and deploy Portfolio Management solutions across $15M+ ARR in federal contracts while ensuring strict compliance with FedRAMP standards and DoD security requirements. Needed to work backwards from stakeholder needs to align SaaS platform capabilities with expected outcomes.",
+    solution: "Drove design and deployment of Portfolio Management solutions by aligning delivery with customer goals and managing scope from concept to execution. Led complex migrations of SaaS platform implementations and deployments, ensuring seamless transitions and performance-optimized configurations across enterprise environments.",
     results: [
-      "Processing 10M+ events daily with sub-second latency",
-      "90% cost reduction compared to traditional server-based approach",
-      "Automatic scaling from 0 to peak load with no manual intervention",
-      "Real-time fraud detection reducing losses by $2M annually",
-      "Complete audit trail and compliance with financial regulations"
+      "Drove $15M+ ARR in federal contract delivery",
+      "Delivered 12 sensitive DoD solutions with FedRAMP compliance",
+      "Reduced delivery time by 18% through stakeholder-aligned architecture",
+      "Improved overall project efficiency across enterprise deployments"
     ],
     technologies: [
-      "API Gateway",
-      "Lambda",
-      "Kinesis Data Streams",
-      "Kinesis Firehose",
-      "S3",
-      "Glue",
-      "Athena",
-      "QuickSight",
-      "SageMaker",
-      "Step Functions",
-      "DynamoDB"
+      "FedRAMP",
+      "AWS GovCloud",
+      "Security Architecture",
+      "SaaS Platform",
+      "Compliance",
+      "DoD Standards"
     ],
-    downloadUrl: "/documents/serverless-pipeline-architecture.pdf"
+    downloadUrl: "/documents/fedramp-architecture.pdf"
   },
   {
     id: "3",
-    slug: "kubernetes-platform",
-    title: "Kubernetes Platform Engineering",
-    subtitle: "Multi-tenant Container Orchestration",
-    category: "Platform",
-    image: "/images/project-kubernetes.png",
-    description: "Designed and implemented a production-grade Kubernetes platform on AWS EKS serving 50+ development teams, with automated CI/CD, observability, and security guardrails.",
-    challenge: "The organization had dozens of development teams deploying applications inconsistently across various environments, leading to configuration drift, security vulnerabilities, and operational overhead. They needed a standardized platform that provided developer autonomy while maintaining security and reliability.",
-    solution: "Deployed a multi-cluster EKS architecture with dedicated clusters for production, staging, and development. Implemented GitOps workflows using ArgoCD, automated certificate management with cert-manager, service mesh with Istio for traffic management and security, and comprehensive observability stack with Prometheus, Grafana, and Loki. Created self-service developer portal with standardized application templates and automated compliance checks.",
+    slug: "fortune-500-innovation",
+    title: "Fortune 500 Innovation Architecture",
+    subtitle: "Enterprise 0-1 Solutions",
+    category: "Enterprise",
+    image: "/images/project-cloud-migration.png",
+    description: "Coordinated cross-functional teams across product, engineering, and business groups for 4 Fortune 500 clients at Wilde Group, using research and design thinking workshops to define 0-1 solution opportunities that shaped early architecture direction.",
+    challenge: "Translate research findings into prioritized technical focus areas while evaluating system constraints and technology gaps across multiple Fortune 500 enterprise environments. Needed to guide early architecture exploration and improve cross-team alignment during development planning.",
+    solution: "Guided early architecture exploration by translating research findings into prioritized technical focus areas. Partnered with engineering leads to evaluate system constraints and technology gaps, producing modernization recommendations. Provided data-informed inputs to R&D-style planning efforts, strengthening C-suite clarity on technology priorities.",
     results: [
-      "50+ teams onboarded to platform within 6 months",
-      "Deployment frequency increased from weekly to multiple times per day",
-      "Mean time to recovery (MTTR) reduced from hours to minutes",
-      "100% of workloads passing security scans before deployment",
-      "Infrastructure costs optimized through cluster autoscaling and spot instances"
+      "Contributed to launch of 9 enterprise innovation initiatives",
+      "Reduced integration blockers by 25% across 3 business units",
+      "Cut early-stage architectural alignment cycles by 30%",
+      "Improved cross-team alignment during 0-N development planning"
     ],
     technologies: [
-      "EKS",
-      "Kubernetes",
-      "ArgoCD",
-      "Istio",
-      "Prometheus",
-      "Grafana",
-      "Loki",
-      "cert-manager",
-      "Karpenter",
-      "Terraform",
-      "GitLab CI"
+      "Enterprise Architecture",
+      "Cloud Migration",
+      "API Integration",
+      "Design Thinking",
+      "System Modernization"
     ],
-    downloadUrl: "/documents/kubernetes-platform-architecture.pdf"
+    downloadUrl: "/documents/enterprise-architecture.pdf"
   },
   {
     id: "4",
-    slug: "zero-trust-security",
-    title: "Zero Trust Security Architecture",
-    subtitle: "Defense in Depth for Cloud",
-    category: "Security",
-    image: "/images/project-security.png",
-    description: "Implemented comprehensive zero-trust security architecture across AWS environment, achieving compliance with SOC 2, ISO 27001, and PCI-DSS while maintaining developer productivity.",
-    challenge: "The client experienced a security incident that exposed weaknesses in their perimeter-based security model. They needed to implement zero-trust principles across their entire AWS infrastructure without disrupting ongoing business operations or slowing down development teams.",
-    solution: "Designed multi-layered security architecture implementing identity-based access controls with AWS IAM Identity Center and Cognito, network segmentation using VPC, Security Groups, and NACLs, encryption at rest and in transit for all data, comprehensive logging and monitoring with CloudTrail, GuardDuty, and Security Hub. Implemented automated security scanning in CI/CD pipelines, secrets management with Secrets Manager, and infrastructure-as-code security validation with Checkov and tfsec.",
+    slug: "healthcare-iot-platform",
+    title: "ER Patient Experience Platform",
+    subtitle: "Healthcare IoT Innovation",
+    category: "Healthcare IoT",
+    image: "/images/project-kubernetes.png",
+    description: "Founded Elegant Solutions and conceived an ER platform MVP with custom IoT-based mesh network, turning frontline insights from 200+ patient and staff interviews into a patient-focused design that improved hospital operations and led to company acquisition.",
+    challenge: "Address ER inefficiencies, poor communication, lack of transparency, and low HCAHPS survey participation by designing solutions that improved patient transparency of process and boosted federal survey engagement across multiple HCA hospital regions.",
+    solution: "Led discovery sessions with over 200 emergency room patients and hospital staff including executives across multiple HCA regions. Conceived and wireframed an ER platform MVP, oversaw development of a custom IoT-based mesh network independent of HL7, implemented timebound KPIs, and designed automated reporting tied to patient interactions enabling first-of-its-kind customer recovery tool for ERs.",
     results: [
-      "Zero security incidents in 18 months post-implementation",
-      "Achieved SOC 2 Type II, ISO 27001, and PCI-DSS compliance",
-      "Automated 95% of security compliance checks",
-      "Reduced mean time to detect (MTTD) threats from days to minutes",
-      "All infrastructure changes reviewed and approved automatically for security"
+      "Increased ER throughput by 5%",
+      "Improved hospital survey participation by 65%",
+      "Created first-of-its-kind customer recovery tool for ERs",
+      "Platform success led to company acquisition in 2019"
     ],
     technologies: [
-      "IAM Identity Center",
-      "Cognito",
-      "GuardDuty",
-      "Security Hub",
-      "CloudTrail",
-      "KMS",
-      "Secrets Manager",
-      "WAF",
-      "Shield",
-      "Inspector",
-      "Macie"
+      "IoT",
+      "Mesh Networks",
+      "Healthcare IT",
+      "Real-time Analytics",
+      "Patient Experience",
+      "Custom Hardware"
     ],
-    downloadUrl: "/documents/zero-trust-architecture.pdf"
+    downloadUrl: "/documents/healthcare-iot-architecture.pdf"
   }
 ];
 

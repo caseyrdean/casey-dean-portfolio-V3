@@ -53,8 +53,8 @@ export default function Home() {
               </h1>
               
               <p className="text-xl md:text-2xl font-subhead text-muted-foreground max-w-2xl leading-relaxed">
-                Architecting scalable cloud solutions that transform enterprise infrastructure. 
-                Specializing in AWS migration, serverless architectures, and zero-trust security.
+                Translating complex business requirements into scalable, secure system designs. 
+                Specializing in AI solutions, FedRAMP compliance, and enterprise innovation architecture.
               </p>
               
               <div className="flex flex-wrap gap-4 pt-4">
@@ -163,7 +163,7 @@ export default function Home() {
               </span>
             </div>
             <h2 className="text-5xl md:text-7xl font-display text-foreground">
-              AWARDS & PUBLICATIONS
+              CREDENTIALS & EXPERIENCE
             </h2>
           </div>
           
@@ -172,27 +172,27 @@ export default function Home() {
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-8">
                 <Award className="w-8 h-8 text-accent" />
-                <h3 className="text-2xl font-display text-foreground">AWARDS</h3>
+                <h3 className="text-2xl font-display text-foreground">CREDENTIALS</h3>
               </div>
               
               {[
                 {
                   year: "2025",
-                  title: "AWS Hero",
+                  title: "AWS Solutions Architect - Associate",
                   org: "Amazon Web Services",
-                  description: "Recognized for outstanding contributions to the AWS community"
+                  description: "SAA-C03 certification demonstrating expertise in designing distributed systems on AWS. Valid through November 2028."
                 },
                 {
-                  year: "2024",
-                  title: "Cloud Architect of the Year",
-                  org: "Cloud Computing Association",
-                  description: "Excellence in enterprise cloud architecture design"
+                  year: "2019",
+                  title: "Successful Startup Exit",
+                  org: "Elegant Solutions",
+                  description: "Founded healthcare IoT company that was acquired after proving 65% improvement in hospital survey participation."
                 },
                 {
-                  year: "2023",
-                  title: "Innovation Award",
-                  org: "TechCrunch Disrupt",
-                  description: "Serverless architecture innovation in fintech"
+                  year: "2016",
+                  title: "BBA Entrepreneurship",
+                  org: "University of Wisconsin - Whitewater",
+                  description: "Bachelor of Business Administration with focus on Entrepreneurship."
                 }
               ].map((award, i) => (
                 <div key={i} className="border-l-2 border-accent/50 pl-6 pb-6 relative group hover:border-accent transition-colors">
@@ -211,37 +211,37 @@ export default function Home() {
               ))}
             </div>
             
-            {/* Publications */}
+            {/* Experience Highlights */}
             <div className="space-y-6">
               <div className="flex items-center gap-3 mb-8">
                 <BookOpen className="w-8 h-8 text-secondary" />
-                <h3 className="text-2xl font-display text-foreground">PUBLICATIONS</h3>
+                <h3 className="text-2xl font-display text-foreground">EXPERIENCE</h3>
               </div>
               
               {[
                 {
-                  year: "2025",
-                  title: "Serverless Architectures: A Practical Guide",
-                  publisher: "O'Reilly Media",
-                  type: "Book"
+                  year: "2024-Present",
+                  title: "Lead Solutions Architect",
+                  publisher: "Manus AI",
+                  type: "Current"
                 },
                 {
-                  year: "2024",
-                  title: "Zero Trust Security in AWS",
-                  publisher: "AWS Architecture Blog",
-                  type: "Article"
+                  year: "2022-2024",
+                  title: "Senior Innovation Management Consultant",
+                  publisher: "Sopheon",
+                  type: "Federal"
                 },
                 {
-                  year: "2024",
-                  title: "Cost Optimization Strategies for EKS",
-                  publisher: "InfoQ",
-                  type: "Article"
+                  year: "2019-2022",
+                  title: "Research Analyst / Innovation Analyst",
+                  publisher: "Wilde Group",
+                  type: "Enterprise"
                 },
                 {
-                  year: "2023",
-                  title: "Migrating Legacy Systems to the Cloud",
-                  publisher: "IEEE Cloud Computing",
-                  type: "Paper"
+                  year: "2016-2018",
+                  title: "Founding Partner",
+                  publisher: "Elegant Solutions",
+                  type: "Founder"
                 }
               ].map((pub, i) => (
                 <div key={i} className="border border-primary/30 bg-card p-6 hover:border-secondary transition-colors group">
