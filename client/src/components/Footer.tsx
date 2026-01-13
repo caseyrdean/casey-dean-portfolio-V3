@@ -51,13 +51,14 @@ export default function Footer() {
                 className="flex items-center gap-3 text-sm text-muted-foreground hover:text-primary transition-colors duration-300 group"
               >
                 <Mail className="w-4 h-4 group-hover:text-primary" />
-                <span className="font-body">casey.dean@cloudarchitect.io</span>
+                <span className="font-body">casey.r.dean1990@gmail.com</span>
               </a>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span className="font-body">San Francisco, CA</span>
+                <span className="font-body">Jersey City, New Jersey USA</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span className="font-body">AWS Certified Solutions Architect - Professional</span>
+                <span className="font-body">AWS Certified Solutions Architect - Associate.
+Multi start-up founder</span>
               </div>
             </div>
           </div>
