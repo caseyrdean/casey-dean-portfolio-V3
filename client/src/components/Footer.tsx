@@ -5,6 +5,15 @@
 
 import { Github, Linkedin, Mail } from "lucide-react";
 
+// HuggingFace SVG Icon Component
+function HuggingFaceIcon() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm0 22c-5.52 0-10-4.48-10-10S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 10 15.5 10 14 10.67 14 11.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 10 8.5 10 7 10.67 7 11.5 7.67 13 8.5 13zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+    </svg>
+  );
+}
+
 export default function Footer() {
   return (
     <footer id="contact" className="relative border-t border-primary/30 bg-card mt-32">
@@ -82,6 +91,16 @@ export default function Footer() {
                 className="w-12 h-12 border border-primary/30 bg-background flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
               >
                 <Mail className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+              </a>
+              <a 
+                href="https://huggingface.co/caseyrdean" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-12 h-12 border border-primary/30 bg-background flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
+              >
+                <div className="text-muted-foreground group-hover:text-primary transition-colors">
+                  <HuggingFaceIcon />
+                </div>
               </a>
             </div>
             <p className="text-xs text-muted-foreground font-body mt-6">
