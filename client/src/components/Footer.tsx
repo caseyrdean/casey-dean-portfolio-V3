@@ -23,8 +23,8 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 border-2 border-primary bg-background flex items-center justify-center neon-border">
-                <span className="text-2xl font-display text-primary neon-glow">CD</span>
+              <div className="w-20 h-20 border-2 border-primary bg-background flex items-center justify-center neon-border overflow-hidden rounded">
+                <img src="/images/casey-profile.jpg" alt="Casey Dean" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-display text-foreground tracking-wider">
