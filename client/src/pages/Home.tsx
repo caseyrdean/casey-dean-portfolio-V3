@@ -209,6 +209,56 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+              
+              {/* Skills Section */}
+              <div className="mt-12 pt-8 border-t border-primary/20">
+                <div className="flex items-center gap-3 mb-6">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  <h3 className="text-xl font-display text-foreground">SKILLS</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { name: "EC2", color: "primary" },
+                    { name: "S3", color: "secondary" },
+                    { name: "Lambda", color: "accent" },
+                    { name: "VPC", color: "primary" },
+                    { name: "CloudFront", color: "secondary" },
+                    { name: "Route 53", color: "accent" },
+                    { name: "IAM", color: "primary" },
+                    { name: "CloudFormation", color: "secondary" },
+                    { name: "Terraform", color: "accent" },
+                    { name: "CDK", color: "primary" },
+                    { name: "Python", color: "secondary" },
+                    { name: "TypeScript", color: "accent" },
+                    { name: "React", color: "primary" },
+                    { name: "Next.js", color: "secondary" },
+                    { name: "Bedrock", color: "accent" },
+                    { name: "SageMaker", color: "primary" },
+                    { name: "DynamoDB", color: "secondary" },
+                    { name: "Cognito", color: "accent" },
+                    { name: "FedRAMP", color: "primary" },
+                    { name: "Zero Trust", color: "secondary" },
+                    { name: "GenAI", color: "accent" },
+                    { name: "LangGraph", color: "primary" },
+                    { name: "OpenAI API", color: "secondary" },
+                    { name: "HuggingFace", color: "accent" },
+                  ].map((skill, i) => (
+                    <span 
+                      key={i} 
+                      className={`skill-tag px-3 py-1 text-xs font-subhead tracking-wider border bg-background/50 backdrop-blur-sm transition-all duration-500 hover:scale-110 cursor-default ${
+                        skill.color === 'primary' ? 'border-primary/50 text-primary hover:bg-primary/20 hover:border-primary hover:shadow-[0_0_15px_rgba(0,255,255,0.5)]' :
+                        skill.color === 'secondary' ? 'border-secondary/50 text-secondary hover:bg-secondary/20 hover:border-secondary hover:shadow-[0_0_15px_rgba(255,0,255,0.5)]' :
+                        'border-accent/50 text-accent hover:bg-accent/20 hover:border-accent hover:shadow-[0_0_15px_rgba(0,255,128,0.5)]'
+                      }`}
+                      style={{ animationDelay: `${i * 0.1}s` }}
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
             
             {/* Experience Highlights */}

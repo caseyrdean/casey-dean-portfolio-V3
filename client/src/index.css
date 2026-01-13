@@ -276,4 +276,63 @@
     33% { transform: translate(2px, -2px); }
     66% { transform: translate(-2px, 2px); }
   }
+  
+  /* Skill tag ripple and color transition animation */
+  .skill-tag {
+    animation: skill-pulse 3s ease-in-out infinite;
+    animation-fill-mode: both;
+  }
+  
+  @keyframes skill-pulse {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+  }
+  
+  /* Staggered color wave animation */
+  .skill-tag:nth-child(3n+1) {
+    animation: skill-wave-cyan 4s ease-in-out infinite;
+  }
+  
+  .skill-tag:nth-child(3n+2) {
+    animation: skill-wave-magenta 4s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+  
+  .skill-tag:nth-child(3n) {
+    animation: skill-wave-green 4s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+  
+  @keyframes skill-wave-cyan {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 25px rgba(0, 255, 255, 0.3);
+    }
+  }
+  
+  @keyframes skill-wave-magenta {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.6), 0 0 25px rgba(255, 0, 255, 0.3);
+    }
+  }
+  
+  @keyframes skill-wave-green {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(57, 255, 20, 0.6), 0 0 25px rgba(57, 255, 20, 0.3);
+    }
+  }
 }
