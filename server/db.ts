@@ -1,0 +1,182 @@
+import { eq, desc, and } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/mysql2";
+import { InsertUser, users, blogPosts, InsertBlogPost, BlogPost, blogAttachments, InsertBlogAttachment, BlogAttachment } from "../drizzle/schema";
+import { ENV } from './_core/env';
+
+let _db: ReturnType<typeof drizzle> | null = null;
+
+// Lazily create the drizzle instance so local tooling can run without a DB.
+export async function getDb() {
+  if (!_db && process.env.DATABASE_URL) {
+    try {
+      _db = drizzle(process.env.DATABASE_URL);
+    } catch (error) {
+      console.warn("[Database] Failed to connect:", error);
+      _db = null;
+    }
+  }
+  return _db;
+}
+
+export async function upsertUser(user: InsertUser): Promise<void> {
+  if (!user.openId) {
+    throw new Error("User openId is required for upsert");
+  }
+
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot upsert user: database not available");
+    return;
+  }
+
+  try {
+    const values: InsertUser = {
+      openId: user.openId,
+    };
+    const updateSet: Record<string, unknown> = {};
+
+    const textFields = ["name", "email", "loginMethod"] as const;
+    type TextField = (typeof textFields)[number];
+
+    const assignNullable = (field: TextField) => {
+      const value = user[field];
+      if (value === undefined) return;
+      const normalized = value ?? null;
+      values[field] = normalized;
+      updateSet[field] = normalized;
+    };
+
+    textFields.forEach(assignNullable);
+
+    if (user.lastSignedIn !== undefined) {
+      values.lastSignedIn = user.lastSignedIn;
+      updateSet.lastSignedIn = user.lastSignedIn;
+    }
+    if (user.role !== undefined) {
+      values.role = user.role;
+      updateSet.role = user.role;
+    } else if (user.openId === ENV.ownerOpenId) {
+      values.role = 'admin';
+      updateSet.role = 'admin';
+    }
+
+    if (!values.lastSignedIn) {
+      values.lastSignedIn = new Date();
+    }
+
+    if (Object.keys(updateSet).length === 0) {
+      updateSet.lastSignedIn = new Date();
+    }
+
+    await db.insert(users).values(values).onDuplicateKeyUpdate({
+      set: updateSet,
+    });
+  } catch (error) {
+    console.error("[Database] Failed to upsert user:", error);
+    throw error;
+  }
+}
+
+export async function getUserByOpenId(openId: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+
+  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+// Blog Post Queries
+
+export async function createBlogPost(post: InsertBlogPost): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(blogPosts).values(post);
+  return result[0].insertId;
+}
+
+export async function updateBlogPost(id: number, post: Partial<InsertBlogPost>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(blogPosts).set(post).where(eq(blogPosts.id, id));
+}
+
+export async function deleteBlogPost(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete attachments first
+  await db.delete(blogAttachments).where(eq(blogAttachments.postId, id));
+  // Then delete the post
+  await db.delete(blogPosts).where(eq(blogPosts.id, id));
+}
+
+export async function getBlogPostById(id: number): Promise<BlogPost | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  return result[0];
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+  return result[0];
+}
+
+export async function getAllBlogPosts(includeUnpublished = false): Promise<BlogPost[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (includeUnpublished) {
+    return db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
+  }
+  
+  return db.select().from(blogPosts)
+    .where(eq(blogPosts.published, true))
+    .orderBy(desc(blogPosts.publishedAt));
+}
+
+export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
+  return getAllBlogPosts(false);
+}
+
+// Blog Attachment Queries
+
+export async function createBlogAttachment(attachment: InsertBlogAttachment): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(blogAttachments).values(attachment);
+  return result[0].insertId;
+}
+
+export async function deleteBlogAttachment(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(blogAttachments).where(eq(blogAttachments.id, id));
+}
+
+export async function getAttachmentsByPostId(postId: number): Promise<BlogAttachment[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(blogAttachments).where(eq(blogAttachments.postId, postId));
+}
+
+export async function getAttachmentById(id: number): Promise<BlogAttachment | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(blogAttachments).where(eq(blogAttachments.id, id)).limit(1);
+  return result[0];
+}

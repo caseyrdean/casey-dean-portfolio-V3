@@ -9,19 +9,21 @@ import Home from "./pages/Home";
 import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import BlogAdmin from "./pages/BlogAdmin";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
  * Dark theme with electric cyan, magenta, and toxic green neon accents
  * Aggressive angular layouts with diagonal cuts and glitch effects
  */
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/project/:slug"} component={ProjectDetail} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
+      <Route path={"/admin/blog"} component={BlogAdmin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

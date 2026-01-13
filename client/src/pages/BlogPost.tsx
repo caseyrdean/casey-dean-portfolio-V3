@@ -1,9 +1,10 @@
 import { Link, useParams, useLocation } from "wouter";
-import { ArrowLeft, Calendar, Clock, Tag, Share2, Linkedin, Twitter } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Tag, Share2, Linkedin, Twitter, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { getBlogPost, blogPosts } from "@/data/blog";
+import { trpc } from "@/lib/trpc";
 import { Streamdown } from "streamdown";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
@@ -14,20 +15,49 @@ import { Streamdown } from "streamdown";
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const [, setLocation] = useLocation();
-  const post = getBlogPost(slug || "");
+  
+  // Try to fetch from database first
+  const { data: dbPost, isLoading, error } = trpc.blog.getBySlug.useQuery(
+    { slug: slug || "" },
+    { enabled: !!slug }
+  );
+  
+  // Fall back to static data if not in database
+  const staticPost = getBlogPost(slug || "");
+  
+  // Use database post if available, otherwise static
+  const post = dbPost ? {
+    id: dbPost.id.toString(),
+    slug: dbPost.slug,
+    title: dbPost.title,
+    excerpt: dbPost.excerpt || '',
+    date: dbPost.publishedAt?.toISOString() || dbPost.createdAt.toISOString(),
+    readTime: dbPost.readTime || '5 min read',
+    tags: (dbPost.tags as string[]) || [],
+    category: dbPost.category || 'General',
+    content: dbPost.content,
+  } : staticPost;
 
   useEffect(() => {
-    if (!post) {
+    if (!isLoading && !post) {
       setLocation("/blog");
     }
     window.scrollTo(0, 0);
-  }, [post, setLocation]);
+  }, [post, setLocation, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!post) {
     return null;
   }
 
-  // Get related posts (excluding current)
+  // Get related posts (excluding current) - only from static for now
   const relatedPosts = blogPosts
     .filter(p => p.id !== post.id)
     .slice(0, 2);
@@ -79,17 +109,19 @@ export default function BlogPost() {
             </h1>
             
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {post.tags.map(tag => (
-                <span 
-                  key={tag}
-                  className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono border border-primary/30 text-primary/80 bg-primary/5"
-                >
-                  <Tag className="w-3 h-3" />
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-8">
+                {post.tags.map(tag => (
+                  <span 
+                    key={tag}
+                    className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono border border-primary/30 text-primary/80 bg-primary/5"
+                  >
+                    <Tag className="w-3 h-3" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             
             {/* Share buttons */}
             <div className="flex items-center gap-4 pb-8 border-b border-border/50">

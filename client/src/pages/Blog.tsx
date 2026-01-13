@@ -1,8 +1,9 @@
 import { Link } from "wouter";
-import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Tag, Loader2 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { blogPosts } from "@/data/blog";
+import { blogPosts as staticBlogPosts } from "@/data/blog";
+import { trpc } from "@/lib/trpc";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
  * Dark theme with electric cyan, magenta, and toxic green neon accents
@@ -10,6 +11,25 @@ import { blogPosts } from "@/data/blog";
  */
 
 export default function Blog() {
+  // Fetch posts from database
+  const { data: dbPosts, isLoading, error } = trpc.blog.list.useQuery();
+  
+  // Use database posts if available, otherwise fall back to static posts
+  const posts = dbPosts && dbPosts.length > 0 
+    ? dbPosts.map(post => ({
+        id: post.id.toString(),
+        slug: post.slug,
+        title: post.title,
+        excerpt: post.excerpt || '',
+        date: post.publishedAt?.toISOString() || post.createdAt.toISOString(),
+        readTime: post.readTime || '5 min read',
+        tags: (post.tags as string[]) || [],
+        category: post.category || 'General',
+        featured: false,
+        content: post.content,
+      }))
+    : staticBlogPosts;
+  
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -47,87 +67,95 @@ export default function Blog() {
       {/* Blog Posts Grid */}
       <section className="py-16">
         <div className="container">
-          <div className="grid gap-8">
-            {blogPosts.map((post, index) => (
-              <Link
-                key={post.id}
-                href={`/blog/${post.slug}`}
-                className="group block"
-              >
-                <article 
-                  className="relative border border-border/50 bg-card/30 backdrop-blur-sm p-8 transition-all duration-500 hover:border-primary/50 hover:bg-card/50"
-                  style={{ animationDelay: `${index * 100}ms` }}
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : (
+            <div className="grid gap-8">
+              {posts.map((post, index) => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="group block"
                 >
-                  {/* Neon glow on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5" />
-                  </div>
-                  
-                  {/* Featured badge */}
-                  {post.featured && (
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-secondary/20 border border-secondary/50">
-                      <span className="text-xs font-subhead tracking-wider text-secondary uppercase">
-                        Featured
-                      </span>
+                  <article 
+                    className="relative border border-border/50 bg-card/30 backdrop-blur-sm p-8 transition-all duration-500 hover:border-primary/50 hover:bg-card/50"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    {/* Neon glow on hover */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5" />
                     </div>
-                  )}
-                  
-                  <div className="relative z-10">
-                    {/* Meta info */}
-                    <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        <span className="font-mono">
-                          {new Date(post.date).toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })}
+                    
+                    {/* Featured badge */}
+                    {'featured' in post && post.featured && (
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-secondary/20 border border-secondary/50">
+                        <span className="text-xs font-subhead tracking-wider text-secondary uppercase">
+                          Featured
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span className="font-mono">{post.readTime}</span>
+                    )}
+                    
+                    <div className="relative z-10">
+                      {/* Meta info */}
+                      <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-primary" />
+                          <span className="font-mono">
+                            {new Date(post.date).toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-primary" />
+                          <span className="font-mono">{post.readTime}</span>
+                        </div>
+                      </div>
+                      
+                      {/* Title */}
+                      <h2 className="font-display text-2xl md:text-3xl font-bold mb-4 text-foreground group-hover:text-primary transition-colors duration-300">
+                        {post.title}
+                      </h2>
+                      
+                      {/* Excerpt */}
+                      <p className="text-muted-foreground font-body mb-6 max-w-3xl">
+                        {post.excerpt}
+                      </p>
+                      
+                      {/* Tags */}
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {post.tags.map(tag => (
+                            <span 
+                              key={tag}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono border border-primary/30 text-primary/80 bg-primary/5"
+                            >
+                              <Tag className="w-3 h-3" />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Read more */}
+                      <div className="flex items-center gap-2 text-primary font-subhead text-sm tracking-wider uppercase">
+                        <span>Read Article</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
                       </div>
                     </div>
                     
-                    {/* Title */}
-                    <h2 className="font-display text-2xl md:text-3xl font-bold mb-4 text-foreground group-hover:text-primary transition-colors duration-300">
-                      {post.title}
-                    </h2>
-                    
-                    {/* Excerpt */}
-                    <p className="text-muted-foreground font-body mb-6 max-w-3xl">
-                      {post.excerpt}
-                    </p>
-                    
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {post.tags.map(tag => (
-                        <span 
-                          key={tag}
-                          className="inline-flex items-center gap-1 px-3 py-1 text-xs font-mono border border-primary/30 text-primary/80 bg-primary/5"
-                        >
-                          <Tag className="w-3 h-3" />
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* Read more */}
-                    <div className="flex items-center gap-2 text-primary font-subhead text-sm tracking-wider uppercase">
-                      <span>Read Article</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
-                    </div>
-                  </div>
-                  
-                  {/* Corner accents */}
-                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/50 group-hover:border-primary transition-colors duration-300" />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 group-hover:border-primary transition-colors duration-300" />
-                </article>
-              </Link>
-            ))}
-          </div>
+                    {/* Corner accents */}
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-primary/50 group-hover:border-primary transition-colors duration-300" />
+                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-primary/50 group-hover:border-primary transition-colors duration-300" />
+                  </article>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
