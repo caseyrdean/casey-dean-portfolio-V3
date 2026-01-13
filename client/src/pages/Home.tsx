@@ -220,41 +220,55 @@ export default function Home() {
               
               {[
                 {
-                  year: "2024-Present",
+                  year: "06/2024 - Present",
                   title: "Lead Solutions Architect",
-                  publisher: "Manus AI",
-                  type: "Current"
+                  company: "Jaggaer",
+                  type: "Current",
+                  summary: "Translating complex business requirements into scalable, secure system designs across discovery, configuration, deployment, and post-go-live transition. Acting as primary architectural advisor to client stakeholders, guiding trade-off decisions across functionality, integrations, and compliance constraints."
                 },
                 {
-                  year: "2022-2024",
+                  year: "05/2022 - 06/2024",
                   title: "Senior Innovation Management Consultant",
-                  publisher: "Sopheon",
-                  type: "Federal"
+                  company: "Sopheon",
+                  type: "Federal",
+                  summary: "Drove design and deployment of Portfolio Management solutions across $15M+ ARR in federal contracts. Delivered 12 sensitive DoD solutions by guiding secure, compliance-focused technical decisions aligned with FedRAMP standards."
                 },
                 {
-                  year: "2019-2022",
-                  title: "Research Analyst / Innovation Analyst",
-                  publisher: "Wilde Group",
-                  type: "Enterprise"
+                  year: "02/2019 - 05/2022",
+                  title: "Research Analyst / Innovation Analyst / Founder",
+                  company: "Wilde Group",
+                  type: "Enterprise",
+                  summary: "Coordinated cross-functional teams across product, engineering, and business groups for 4 Fortune 500 clients. Guided early architecture exploration contributing to the launch of 9 enterprise innovation initiatives."
                 },
                 {
-                  year: "2016-2018",
+                  year: "09/2018 - 06/2020",
+                  title: "Lead Analyst Global Talent Acquisition Insights",
+                  company: "Stryker",
+                  type: "Analytics",
+                  summary: "Unified cross-departmental data models in Workday to establish a centralized KPI framework. Developed Tableau-based reporting system eliminating 40+ manual reports and reducing stakeholder requests by 50%."
+                },
+                {
+                  year: "02/2016 - 12/2018",
                   title: "Founding Partner",
-                  publisher: "Elegant Solutions",
-                  type: "Founder"
+                  company: "Elegant Solutions",
+                  type: "Founder",
+                  summary: "Led discovery sessions with over 200 ER patients and hospital staff to uncover workflow inefficiencies. Conceived and wireframed an ER platform MVP with custom IoT-based mesh network, leading to company acquisition in 2019."
                 }
-              ].map((pub, i) => (
+              ].map((exp, i) => (
                 <div key={i} className="border border-primary/30 bg-card p-6 hover:border-secondary transition-colors group">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-subhead tracking-widest text-secondary uppercase">{pub.type}</span>
-                      <span className="text-xs font-body text-muted-foreground">{pub.year}</span>
+                      <span className="text-xs font-subhead tracking-widest text-secondary uppercase">{exp.type}</span>
+                      <span className="text-xs font-body text-muted-foreground">{exp.year}</span>
                     </div>
                     <h4 className="text-lg font-display text-foreground group-hover:text-secondary transition-colors">
-                      {pub.title}
+                      {exp.title}
                     </h4>
-                    <p className="text-sm font-body text-muted-foreground">
-                      {pub.publisher}
+                    <p className="text-sm font-body text-primary">
+                      {exp.company}
+                    </p>
+                    <p className="text-sm font-body text-muted-foreground leading-relaxed">
+                      {exp.summary}
                     </p>
                   </div>
                 </div>
