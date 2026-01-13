@@ -42,7 +42,7 @@ export default function Home() {
             <div className="space-y-6">
               <div className="inline-block border border-primary/50 bg-primary/10 px-4 py-2 backdrop-blur-sm">
                 <span className="text-xs font-subhead tracking-widest text-primary uppercase">
-                  AWS Solutions Architect • Cloud Infrastructure Expert
+                  AWS Solutions Architect • Cloud Infrastructure and AI Obsessed
                 </span>
               </div>
               
