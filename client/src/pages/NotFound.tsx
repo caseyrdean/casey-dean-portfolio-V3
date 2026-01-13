@@ -1,49 +1,55 @@
+/* Design Philosophy: Neon Apocalypse 404 Page
+ * Glitch effect with neon styling
+ */
+
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
-import { useLocation } from "wouter";
+import { Home } from "lucide-react";
 
 export default function NotFound() {
-  const [, setLocation] = useLocation();
-
-  const handleGoHome = () => {
-    setLocation("/");
-  };
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
+    <div className="min-h-screen bg-background flex items-center justify-center relative overflow-hidden">
+      {/* Grid background */}
+      <div className="absolute inset-0 opacity-10" style={{
+        backgroundImage: `linear-gradient(oklch(0.7 0.3 195) 1px, transparent 1px), linear-gradient(90deg, oklch(0.7 0.3 195) 1px, transparent 1px)`,
+        backgroundSize: '50px 50px'
+      }}></div>
+      
+      {/* Scanlines */}
+      <div className="absolute inset-0 scanlines opacity-20"></div>
+      
+      <div className="container relative z-10">
+        <div className="max-w-2xl mx-auto text-center space-y-8">
+          <div className="space-y-4">
+            <h1 className="text-9xl font-display chrome-text leading-none">
+              404
+            </h1>
+            <div className="h-1 w-32 mx-auto bg-gradient-to-r from-primary via-secondary to-accent"></div>
           </div>
-
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
-
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
-
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
+          
+          <div className="space-y-4">
+            <h2 className="text-3xl font-display text-foreground">
+              SYSTEM ERROR
+            </h2>
+            <p className="text-lg font-body text-muted-foreground leading-relaxed">
+              The requested resource could not be located in the cloud infrastructure. 
+              This page may have been moved or deleted.
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className="pt-8">
+            <Link href="/">
+              <Button 
+                size="lg"
+                className="font-subhead tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary neon-border"
+              >
+                <Home className="w-5 h-5 mr-2" />
+                RETURN HOME
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
