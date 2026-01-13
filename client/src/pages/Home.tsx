@@ -53,8 +53,7 @@ export default function Home() {
               </h1>
               
               <p className="text-xl md:text-2xl font-subhead text-muted-foreground max-w-2xl leading-relaxed">
-                Translating complex business requirements into scalable, secure system designs. 
-                Specializing in AI solutions, FedRAMP compliance, and enterprise innovation architecture.
+                AWS Solutions Architect | Enterprise Software Implementation | Scaling Innovation | Digital Strategist | AI Architect | Cloud Architect | AI Strategy | Ideation | Design Thinking | Veteran | Extreme Ownership
               </p>
               
               <div className="flex flex-wrap gap-4 pt-4">
