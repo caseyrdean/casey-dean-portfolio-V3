@@ -24,3 +24,6 @@
 - [x] Protect admin routes with authentication
 - [x] Update blog listing to fetch from database
 - [x] Update blog post detail to fetch from database
+
+## UI Improvements
+- [x] Add admin login button in footer next to copyright

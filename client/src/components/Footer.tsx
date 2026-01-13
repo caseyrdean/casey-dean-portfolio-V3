@@ -3,7 +3,8 @@
  * Contact information and social links with glowing effects
  */
 
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Lock } from "lucide-react";
+import { Link } from "wouter";
 
 // HuggingFace emoji icon
 function HuggingFaceIcon() {
@@ -115,9 +116,18 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-primary/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-muted-foreground font-body">
-              © 2026 Casey Dean. All rights reserved.
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-xs text-muted-foreground font-body">
+                © 2026 Casey Dean. All rights reserved.
+              </p>
+              <Link 
+                href="/admin/blog"
+                className="flex items-center gap-1 text-xs text-muted-foreground/50 hover:text-primary transition-colors duration-300"
+              >
+                <Lock className="w-3 h-3" />
+                <span className="font-body">Admin</span>
+              </Link>
+            </div>
             <p className="text-xs text-muted-foreground font-body">
               Built with React + AWS • Designed with <span className="text-primary">passion</span>
             </p>
