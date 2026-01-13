@@ -3,9 +3,24 @@
  * Fixed position with backdrop blur for depth
  */
 
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export default function Navigation() {
+  const [location] = useLocation();
+
+  const scrollToSection = (sectionId: string) => {
+    // If we're not on the home page, navigate there first
+    if (location !== "/") {
+      window.location.href = "/#" + sectionId;
+      return;
+    }
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-primary/30 bg-background/80 backdrop-blur-md">
       <div className="container">
@@ -25,15 +40,24 @@ export default function Navigation() {
           </Link>
           
           <div className="flex items-center gap-8">
-            <Link href="/#projects" className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors duration-300 uppercase">
+            <button 
+              onClick={() => scrollToSection("projects")}
+              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
+            >
               Projects
-            </Link>
-            <Link href="/#awards" className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-secondary transition-colors duration-300 uppercase">
+            </button>
+            <button 
+              onClick={() => scrollToSection("awards")}
+              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-secondary transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
+            >
               Awards
-            </Link>
-            <Link href="/#contact" className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-accent transition-colors duration-300 uppercase">
+            </button>
+            <button 
+              onClick={() => scrollToSection("contact")}
+              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-accent transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
+            >
               Contact
-            </Link>
+            </button>
           </div>
         </div>
       </div>
