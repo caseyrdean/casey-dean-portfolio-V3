@@ -3,7 +3,7 @@
  * Contact information and social links with glowing effects
  */
 
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -78,12 +78,10 @@ export default function Footer() {
                 <Linkedin className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </a>
               <a 
-                href="https://twitter.com/caseydean" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href="mailto:casey.r.dean1990@gmail.com"
                 className="w-12 h-12 border border-primary/30 bg-background flex items-center justify-center hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
               >
-                <Twitter className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                <Mail className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </a>
             </div>
             <p className="text-xs text-muted-foreground font-body mt-6">
