@@ -57,8 +57,12 @@ export default function Footer() {
                 <span className="font-body">Jersey City, New Jersey USA</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <span className="font-body">AWS Certified Solutions Architect - Associate.
-Multi start-up founder</span>
+                <span className="font-body">•</span>
+                <span className="font-body">AWS Certified Solutions Architect - Associate</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <span className="font-body">•</span>
+                <span className="font-body">Multi start-up founder</span>
               </div>
             </div>
           </div>
