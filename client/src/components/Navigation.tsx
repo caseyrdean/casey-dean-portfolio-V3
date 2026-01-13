@@ -52,9 +52,15 @@ export default function Navigation() {
             >
               Credentials
             </button>
+            <Link 
+              href="/blog"
+              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-accent transition-colors duration-300 uppercase"
+            >
+              Blog
+            </Link>
             <button 
               onClick={() => scrollToSection("contact")}
-              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-accent transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
+              className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-primary transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
             >
               Contact
             </button>

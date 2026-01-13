@@ -479,4 +479,106 @@
     80% { opacity: 0.02; }
     100% { opacity: 0.03; }
   }
+  
+  /* Blog Content Styling */
+  .blog-content h2 {
+    font-family: var(--font-display), sans-serif;
+    color: oklch(0.75 0.15 195);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    border-bottom: 1px solid oklch(0.75 0.15 195 / 0.3);
+    padding-bottom: 0.5rem;
+  }
+  
+  .blog-content h3 {
+    font-family: var(--font-display), sans-serif;
+    color: oklch(0.75 0.2 330);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .blog-content h4 {
+    font-family: var(--font-subhead), sans-serif;
+    color: oklch(0.7 0.15 140);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .blog-content p {
+    color: oklch(0.75 0.01 286);
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+  
+  .blog-content ul, .blog-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+  
+  .blog-content li {
+    color: oklch(0.75 0.01 286);
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+  
+  .blog-content li::marker {
+    color: oklch(0.75 0.15 195);
+  }
+  
+  .blog-content strong {
+    color: oklch(0.85 0.15 195);
+    font-weight: 600;
+  }
+  
+  .blog-content code {
+    background: oklch(0.2 0.01 286);
+    color: oklch(0.7 0.15 140);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.9em;
+  }
+  
+  .blog-content pre {
+    background: oklch(0.15 0.01 286);
+    border: 1px solid oklch(0.75 0.15 195 / 0.3);
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+  
+  .blog-content pre code {
+    background: transparent;
+    padding: 0;
+  }
+  
+  .blog-content blockquote {
+    border-left: 3px solid oklch(0.75 0.2 330);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: oklch(0.7 0.01 286);
+  }
+  
+  .blog-content hr {
+    border: none;
+    border-top: 1px solid oklch(0.75 0.15 195 / 0.3);
+    margin: 2rem 0;
+  }
+  
+  .blog-content a {
+    color: oklch(0.75 0.15 195);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.3s ease;
+  }
+  
+  .blog-content a:hover {
+    color: oklch(0.75 0.2 330);
+  }
 }
