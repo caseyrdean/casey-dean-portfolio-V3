@@ -50,7 +50,7 @@ export default function Navigation() {
               onClick={() => scrollToSection("awards")}
               className="font-subhead text-sm tracking-wider text-muted-foreground hover:text-secondary transition-colors duration-300 uppercase cursor-pointer bg-transparent border-none"
             >
-              Awards
+              Credentials
             </button>
             <button 
               onClick={() => scrollToSection("contact")}
