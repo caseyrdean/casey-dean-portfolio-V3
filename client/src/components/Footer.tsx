@@ -102,7 +102,7 @@ export default function Footer() {
               </a>
             </div>
             <p className="text-xs text-muted-foreground font-body mt-6">
-              Available for consulting and speaking engagements
+              Available for consulting and speaking engagements. I am currently open to roles in Cloud Solution Architecture or AI Solutions Architecture
             </p>
           </div>
         </div>
