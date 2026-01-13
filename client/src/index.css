@@ -336,7 +336,7 @@
     }
   }
   
-  /* VHS Glitch Effect Styles */
+  /* VHS Glitch Effect Styles - More Pronounced */
   .vhs-glitch-overlay {
     position: fixed;
     top: 0;
@@ -346,9 +346,10 @@
     pointer-events: none;
     z-index: 9999;
     overflow: hidden;
+    animation: vhs-screen-shake 0.1s steps(4) infinite;
   }
   
-  /* Scanline distortion */
+  /* Scanline distortion - stronger */
   .vhs-scanlines {
     position: absolute;
     top: 0;
@@ -358,14 +359,14 @@
     background: repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.1) 2px,
-      rgba(0, 0, 0, 0.1) 4px
+      transparent 1px,
+      rgba(0, 0, 0, 0.25) 1px,
+      rgba(0, 0, 0, 0.25) 3px
     );
-    animation: vhs-scanline-flicker 0.1s steps(2) infinite;
+    animation: vhs-scanline-flicker 0.08s steps(3) infinite;
   }
   
-  /* RGB color separation / chromatic aberration */
+  /* RGB color separation / chromatic aberration - more visible */
   .vhs-rgb-shift {
     position: absolute;
     top: 0;
@@ -374,39 +375,49 @@
     height: 100%;
     background: linear-gradient(
       90deg,
-      rgba(255, 0, 0, 0.03) 0%,
-      transparent 33%,
-      rgba(0, 255, 0, 0.02) 33%,
-      transparent 66%,
-      rgba(0, 0, 255, 0.03) 66%,
+      rgba(255, 0, 0, 0.08) 0%,
+      transparent 25%,
+      rgba(0, 255, 255, 0.06) 25%,
+      transparent 50%,
+      rgba(255, 0, 255, 0.07) 50%,
+      transparent 75%,
+      rgba(0, 255, 0, 0.06) 75%,
       transparent 100%
     );
-    animation: vhs-rgb-shift 0.15s steps(3) infinite;
+    animation: vhs-rgb-shift 0.1s steps(5) infinite;
   }
   
-  /* Horizontal noise bars */
+  /* Horizontal noise bars - thicker and more visible */
   .vhs-noise-bar {
     position: absolute;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.1);
-    animation: vhs-noise-move 0.1s linear infinite;
+    left: -10%;
+    width: 120%;
+    height: 6px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), rgba(0, 255, 255, 0.2), transparent);
+    animation: vhs-noise-move 0.08s linear infinite;
   }
   
   .vhs-noise-bar-1 {
-    top: 20%;
+    top: 15%;
     animation-delay: 0s;
+    height: 8px;
   }
   
   .vhs-noise-bar-2 {
-    top: 70%;
-    animation-delay: 0.05s;
-    height: 2px;
-    background: rgba(0, 255, 255, 0.08);
+    top: 55%;
+    animation-delay: 0.03s;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.25), rgba(255, 255, 255, 0.2), transparent);
   }
   
-  /* Static noise overlay */
+  .vhs-noise-bar-3 {
+    top: 85%;
+    animation-delay: 0.06s;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.2), rgba(255, 255, 255, 0.15), transparent);
+  }
+  
+  /* Static noise overlay - more visible */
   .vhs-static {
     position: absolute;
     top: 0;
@@ -414,28 +425,50 @@
     width: 100%;
     height: 100%;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.03;
-    animation: vhs-static-flicker 0.05s steps(5) infinite;
+    opacity: 0.08;
+    animation: vhs-static-flicker 0.04s steps(8) infinite;
+  }
+  
+  /* Screen shake effect */
+  .vhs-shake {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+  
+  @keyframes vhs-screen-shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 1px); }
+    50% { transform: translate(1px, -1px); }
+    75% { transform: translate(-1px, 2px); }
+    100% { transform: translate(2px, 0); }
   }
   
   @keyframes vhs-scanline-flicker {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 0.5; }
+    0%, 100% { opacity: 1; }
+    33% { opacity: 0.7; }
+    66% { opacity: 0.9; }
   }
   
   @keyframes vhs-rgb-shift {
-    0% { transform: translateX(-2px); }
-    33% { transform: translateX(1px); }
-    66% { transform: translateX(-1px); }
-    100% { transform: translateX(2px); }
+    0% { transform: translateX(-4px) skewX(-0.5deg); }
+    20% { transform: translateX(3px) skewX(0.3deg); }
+    40% { transform: translateX(-2px) skewX(-0.2deg); }
+    60% { transform: translateX(4px) skewX(0.4deg); }
+    80% { transform: translateX(-3px) skewX(-0.3deg); }
+    100% { transform: translateX(2px) skewX(0.2deg); }
   }
   
   @keyframes vhs-noise-move {
-    0% { transform: translateY(0) scaleY(1); opacity: 0.1; }
-    25% { transform: translateY(10px) scaleY(1.5); opacity: 0.15; }
-    50% { transform: translateY(-5px) scaleY(0.8); opacity: 0.08; }
-    75% { transform: translateY(15px) scaleY(1.2); opacity: 0.12; }
-    100% { transform: translateY(0) scaleY(1); opacity: 0.1; }
+    0% { transform: translateX(0) translateY(0) scaleY(1); opacity: 0.2; }
+    20% { transform: translateX(-20px) translateY(15px) scaleY(2); opacity: 0.35; }
+    40% { transform: translateX(30px) translateY(-10px) scaleY(0.5); opacity: 0.15; }
+    60% { transform: translateX(-15px) translateY(20px) scaleY(1.5); opacity: 0.3; }
+    80% { transform: translateX(25px) translateY(-5px) scaleY(0.8); opacity: 0.25; }
+    100% { transform: translateX(0) translateY(0) scaleY(1); opacity: 0.2; }
   }
   
   @keyframes vhs-static-flicker {
