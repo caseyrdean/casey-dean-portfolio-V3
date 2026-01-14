@@ -27,3 +27,12 @@
 
 ## UI Improvements
 - [x] Add admin login button in footer next to copyright
+
+## Infrastructure & Deployment
+- [x] Create Terraform main configuration for AWS Amplify
+- [x] Create RDS MySQL database configuration
+- [x] Create S3 bucket for file uploads
+- [x] Create IAM roles and policies
+- [x] Create VPC and security groups
+- [x] Create environment variables configuration
+- [x] Create deployment documentation

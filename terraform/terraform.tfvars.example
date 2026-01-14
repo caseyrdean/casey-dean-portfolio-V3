@@ -1,0 +1,47 @@
+# =============================================================================
+# Casey Dean Portfolio - Terraform Variables Example
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values.
+# NEVER commit terraform.tfvars to version control!
+# =============================================================================
+
+# AWS Configuration
+aws_region   = "us-east-1"
+project_name = "casey-dean-portfolio"
+environment  = "prod"
+
+# Database Configuration
+db_instance_class    = "db.t3.micro"    # Free tier eligible
+db_allocated_storage = 20               # GB
+db_name              = "portfolio_db"
+db_username          = "portfolio_admin"
+db_password          = "YOUR_SECURE_PASSWORD_HERE"  # Min 8 characters
+
+# GitHub Configuration
+github_repository   = "caseyrdean/casey-dean-portfolio"
+github_branch       = "main"
+github_access_token = "ghp_YOUR_GITHUB_TOKEN_HERE"
+
+# Application Secrets
+jwt_secret = "YOUR_32_CHARACTER_MINIMUM_SECRET_KEY_HERE"
+
+# Owner Information
+owner_email = "casey.r.dean1990@gmail.com"
+owner_name  = "Casey Dean"
+
+# OAuth Configuration (Manus - leave empty if not using)
+oauth_server_url = ""
+oauth_portal_url = ""
+app_id           = ""
+
+# Custom Domain (optional)
+enable_custom_domain = false
+custom_domain        = ""  # e.g., "caseydean.com"
+
+# Tags
+tags = {
+  Project     = "casey-dean-portfolio"
+  ManagedBy   = "terraform"
+  Environment = "prod"
+  Owner       = "Casey Dean"
+}
