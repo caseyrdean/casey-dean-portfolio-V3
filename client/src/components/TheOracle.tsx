@@ -113,7 +113,7 @@ export default function TheOracle() {
   // Welcome message when first opened
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const welcomeMessage = "Greetings, seeker of knowledge! I am The Oracle, keeper of the sacred scrolls of Casey Dean's professional journey. Ask me anything about his cloud architecture expertise, his projects, or his mystical AWS powers... and the spirits shall reveal the truth!";
+      const welcomeMessage = "Greetings, seeker of knowledge. I am The Oracle, keeper of the sacred scrolls of Casey Dean's professional journey. Ask me anything about his cloud architecture expertise, his projects, or his mystical AWS powers. The spirits shall reveal the truth that dwells within the sacred documents.";
       setMessages([{
         role: 'oracle',
         content: welcomeMessage
@@ -135,19 +135,36 @@ export default function TheOracle() {
     };
   }, []);
 
+  // Transform text to be more mystical
+  const transformToMystical = (text: string): string => {
+    // Add mystical language patterns
+    let mystical = text
+      // Add emphasis to key phrases
+      .replace(/\b(know|reveal|see|understand|truth|spirit|sacred|ancient|power|wisdom)\b/gi, '...$1...')
+      // Add pauses before important statements
+      .replace(/\. /g, '.\n\n') // Double space for dramatic pauses
+      .replace(/\? /g, '?\n\n')
+      .replace(/\! /g, '!\n\n');
+    
+    return mystical;
+  };
+
   const speakText = (text: string) => {
     if (!isSpeechSupported || !voiceEnabled) return;
 
     // Cancel any ongoing speech
     speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Transform text to mystical version
+    const mysticalText = transformToMystical(text);
+
+    const utterance = new SpeechSynthesisUtterance(mysticalText);
     
-    // Configure for a deep, sage-like voice
+    // Configure for a deep, sage-like voice with mystical qualities
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
-    utterance.rate = 0.95; // Slightly slower for gravitas
+    utterance.rate = 0.85; // Slower for more contemplative, mystical tone
     utterance.pitch = 0.5; // Much lower pitch for very deep voice
     utterance.volume = 1.0;
 
@@ -199,9 +216,11 @@ export default function TheOracle() {
         return [...newMessages, { role: 'oracle', content: result.response }];
       });
 
-      // Speak the response
+      // Speak the response with mystical flair
       if (voiceEnabled && isSpeechSupported) {
-        speakText(result.response);
+        // Add mystical intro to response
+        const mysticalResponse = `The spirits have spoken. ${result.response}`;
+        speakText(mysticalResponse);
       }
     } catch (error) {
       const errorMessage = "The mystical energies are disturbed... I cannot provide a reading at this moment. Please try again later.";
@@ -333,9 +352,21 @@ export default function TheOracle() {
                         <span className="text-xs text-muted-foreground font-body">Consulting the spirits...</span>
                       </div>
                     ) : (
-                      <p className="text-sm font-body leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
+              <p className="text-sm font-body leading-relaxed whitespace-pre-wrap">
+                {message.role === 'oracle' ? (
+                  // Display mystical version with emphasis
+                  message.content.split(/\.\.\./g).map((part, idx) => (
+                    <span key={idx}>
+                      {part}
+                      {idx < message.content.split(/\.\.\./g).length - 1 && (
+                        <span className="text-secondary font-semibold">.</span>
+                      )}
+                    </span>
+                  ))
+                ) : (
+                  message.content
+                )}
+              </p>
                     )}
                   </div>
                 </div>

@@ -61,5 +61,8 @@
 - [x] Integrate audio playback in TheOracle component
 - [x] Configure deep, sage-like voice (Dumbledore style)
 
+## Voice Enhancements
+- [x] Add mystical pronunciation effects (pauses, pitch variation, slower speech, mystical language)
+
 ## Bug Fixes
 - [x] Fix TTS API failure for Oracle voice synthesis (switched to Web Speech API)
