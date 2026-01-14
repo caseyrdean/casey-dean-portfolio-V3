@@ -11,7 +11,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdmin from "./pages/BlogAdmin";
 import KnowledgeAdmin from "./pages/KnowledgeAdmin";
-import Zoltar from "./components/Zoltar";
+import TheOracle from "./components/TheOracle";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
  * Dark theme with electric cyan, magenta, and toxic green neon accents
@@ -41,7 +41,7 @@ function App() {
           <Toaster />
           <VHSGlitch />
           <Router />
-          <Zoltar />
+          <TheOracle />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { chunkText, extractKeywords, calculateSimilarity, extractTextFromContent } from "./rag";
 
-describe("Zoltar RAG System", () => {
+describe("The Oracle RAG System", () => {
   describe("chunkText", () => {
     it("splits text into chunks of appropriate size", () => {
       const text = `This is the first paragraph with some content.
@@ -171,7 +171,7 @@ Some text after.`;
   describe("Guardrails", () => {
     it("system prompt enforces strict knowledge boundaries", () => {
       // This test verifies the system prompt contains required guardrails
-      const systemPromptContent = `You are Zoltar, a mystical fortune teller who knows everything about Casey Dean`;
+      const systemPromptContent = `You are The Oracle, a mystical seer who knows everything about Casey Dean`;
       
       // The actual system prompt should contain these critical rules
       const requiredRules = [

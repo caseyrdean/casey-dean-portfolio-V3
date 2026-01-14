@@ -183,7 +183,7 @@ export async function getAttachmentById(id: number): Promise<BlogAttachment | un
 
 
 // =============================================================================
-// Zoltar RAG Knowledge Base Queries
+// The Oracle RAG Knowledge Base Queries
 // =============================================================================
 
 import { 
@@ -193,12 +193,12 @@ import {
   documentChunks,
   InsertDocumentChunk,
   DocumentChunk,
-  zoltarConversations,
-  InsertZoltarConversation,
-  ZoltarConversation,
-  zoltarMessages,
-  InsertZoltarMessage,
-  ZoltarMessage
+  oracleConversations,
+  InsertOracleConversation,
+  OracleConversation,
+  oracleMessages,
+  InsertOracleMessage,
+  OracleMessage
 } from "../drizzle/schema";
 
 // Knowledge Document Queries
@@ -313,22 +313,22 @@ export async function getChunksByIds(ids: number[]): Promise<DocumentChunk[]> {
   return chunks;
 }
 
-// Zoltar Conversation Queries
+// Oracle Conversation Queries
 
-export async function createConversation(conv: InsertZoltarConversation): Promise<number> {
+export async function createConversation(conv: InsertOracleConversation): Promise<number> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const result = await db.insert(zoltarConversations).values(conv);
+  const result = await db.insert(oracleConversations).values(conv);
   return result[0].insertId;
 }
 
-export async function getConversationBySessionId(sessionId: string): Promise<ZoltarConversation | undefined> {
+export async function getConversationBySessionId(sessionId: string): Promise<OracleConversation | undefined> {
   const db = await getDb();
   if (!db) return undefined;
   
-  const result = await db.select().from(zoltarConversations)
-    .where(eq(zoltarConversations.sessionId, sessionId))
+  const result = await db.select().from(oracleConversations)
+    .where(eq(oracleConversations.sessionId, sessionId))
     .limit(1);
   return result[0];
 }
@@ -340,31 +340,31 @@ export async function getOrCreateConversation(sessionId: string, userId?: number
   return createConversation({ sessionId, userId, ipAddress });
 }
 
-// Zoltar Message Queries
+// Oracle Message Queries
 
-export async function createMessage(msg: InsertZoltarMessage): Promise<number> {
+export async function createMessage(msg: InsertOracleMessage): Promise<number> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const result = await db.insert(zoltarMessages).values(msg);
+  const result = await db.insert(oracleMessages).values(msg);
   return result[0].insertId;
 }
 
-export async function getMessagesByConversationId(conversationId: number, limit = 50): Promise<ZoltarMessage[]> {
+export async function getMessagesByConversationId(conversationId: number, limit = 50): Promise<OracleMessage[]> {
   const db = await getDb();
   if (!db) return [];
   
-  return db.select().from(zoltarMessages)
-    .where(eq(zoltarMessages.conversationId, conversationId))
-    .orderBy(zoltarMessages.createdAt)
+  return db.select().from(oracleMessages)
+    .where(eq(oracleMessages.conversationId, conversationId))
+    .orderBy(oracleMessages.createdAt)
     .limit(limit);
 }
 
-export async function getRecentConversations(limit = 20): Promise<ZoltarConversation[]> {
+export async function getRecentConversations(limit = 20): Promise<OracleConversation[]> {
   const db = await getDb();
   if (!db) return [];
   
-  return db.select().from(zoltarConversations)
-    .orderBy(desc(zoltarConversations.updatedAt))
+  return db.select().from(oracleConversations)
+    .orderBy(desc(oracleConversations.updatedAt))
     .limit(limit);
 }

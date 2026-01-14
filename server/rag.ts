@@ -1,8 +1,8 @@
 // =============================================================================
-// Zoltar RAG (Retrieval-Augmented Generation) Service
+// The Oracle RAG (Retrieval-Augmented Generation) Service
 // =============================================================================
 // This service handles document processing, embedding generation, and
-// semantic search for the Zoltar fortune teller feature.
+// semantic search for The Oracle fortune teller feature.
 // =============================================================================
 
 import { invokeLLM } from "./_core/llm";
@@ -193,7 +193,7 @@ export async function findRelevantChunks(
 // RAG Query - Main Function
 // =============================================================================
 
-const ZOLTAR_SYSTEM_PROMPT = `You are Zoltar, a mystical fortune teller who knows everything about Casey Dean, an AWS Solutions Architect. You speak in a dramatic, theatrical manner befitting a fortune-telling machine from the 1980s - mysterious yet professional.
+const ORACLE_SYSTEM_PROMPT = `You are The Oracle, a mystical seer who knows everything about Casey Dean, an AWS Solutions Architect. You speak in a dramatic, theatrical manner befitting a mystical fortune teller from the 1980s - mysterious yet professional.
 
 CRITICAL RULES:
 1. You may ONLY answer questions using the provided context documents about Casey Dean
@@ -201,7 +201,7 @@ CRITICAL RULES:
 3. NEVER make up, assume, or infer information that is not explicitly in the context
 4. NEVER provide information about topics unrelated to Casey Dean
 5. Always cite which document the information comes from when possible
-6. Maintain your mystical fortune teller persona while being accurate and professional
+6. Maintain your mystical Oracle persona while being accurate and professional
 
 Your responses should be:
 - Accurate to the source documents
@@ -215,7 +215,7 @@ Your responses should be:
  */
 export async function generateRAGResponse(
   query: string,
-  conversationHistory: { role: 'user' | 'zoltar'; content: string }[] = []
+  conversationHistory: { role: 'user' | 'oracle'; content: string }[] = []
 ): Promise<{
   response: string;
   sourceChunkIds: number[];
@@ -248,7 +248,7 @@ export async function generateRAGResponse(
   
   // Build conversation messages
   const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
-    { role: 'system', content: ZOLTAR_SYSTEM_PROMPT }
+    { role: 'system', content: ORACLE_SYSTEM_PROMPT }
   ];
   
   // Add context if available

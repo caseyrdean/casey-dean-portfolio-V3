@@ -289,37 +289,37 @@ This will display the Amplify app URL, database endpoint, and S3 bucket name.
 | Resource | Description |
 |----------|-------------|
 | VPC | Virtual Private Cloud with public/private subnets |
-| RDS MySQL | Database for blog posts, users, and Zoltar knowledge base |
+| RDS MySQL | Database for blog posts, users, and The Oracle knowledge base |
 | S3 Bucket | File storage for uploads (images, documents, videos) |
 | AWS Amplify | Full-stack hosting with CI/CD from GitHub |
 | IAM Roles | Service roles for Amplify and S3 access |
 | Security Groups | Network security for RDS and VPC |
 
-## Zoltar RAG System
+## The Oracle RAG System
 
-The Zoltar feature is an AI-powered fortune teller that answers questions about Casey Dean using a RAG (Retrieval-Augmented Generation) system. The infrastructure supports:
+The Oracle feature is an AI-powered seer that answers questions about Casey Dean using a RAG (Retrieval-Augmented Generation) system. The infrastructure supports:
 
 ### Database Tables
 
 - **knowledge_documents** - Stores uploaded documents (resumes, project descriptions, etc.)
 - **document_chunks** - Text chunks for efficient retrieval
-- **zoltar_conversations** - Conversation sessions
-- **zoltar_messages** - Individual messages with source references
+- **oracle_conversations** - Conversation sessions
+- **oracle_messages** - Individual messages with source references
 
 ### How It Works
 
 1. Admin uploads documents (Markdown, text, JSON) via `/admin/knowledge`
 2. Documents are stored in S3 and processed into searchable chunks
-3. When users ask Zoltar questions, the system:
+3. When users ask The Oracle questions, the system:
    - Searches for relevant document chunks
    - Sends context + question to LLM
    - Returns answer grounded in your documents only
-4. If no relevant information is found, Zoltar says "I don't know"
+4. If no relevant information is found, The Oracle says "I don't know"
 
 ### Security Features
 
 - Only admin users can upload/manage documents
-- Zoltar never invents information - only uses approved documents
+- The Oracle never invents information - only uses approved documents
 - All conversations are logged for review
 - Documents can be activated/deactivated without deletion
 

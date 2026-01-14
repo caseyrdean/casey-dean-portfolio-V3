@@ -49,3 +49,14 @@
 - [x] Implement strict guardrails (no hallucination)
 - [x] Update Terraform for vector database support
 - [x] Write tests for RAG functionality
+
+## Rename Zoltar to The Oracle
+- [x] Rename database tables from zoltar_* to oracle_*
+- [x] Update all code references from Zoltar to The Oracle
+- [x] Update UI text and component names
+- [x] Update tests
+
+## Voice Synthesis for The Oracle
+- [x] Add text-to-speech API endpoint for Oracle responses
+- [x] Integrate audio playback in TheOracle component
+- [x] Configure deep, sage-like voice (Dumbledore style)

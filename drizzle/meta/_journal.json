@@ -22,6 +22,13 @@
       "when": 1768415570039,
       "tag": "0002_classy_black_bird",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1768416671474,
+      "tag": "0003_previous_photon",
+      "breakpoints": true
     }
   ]
 }

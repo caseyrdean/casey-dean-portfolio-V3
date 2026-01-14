@@ -1,6 +1,6 @@
 /**
  * Knowledge Base Admin Page
- * Manage documents that Zoltar uses to answer questions
+ * Manage documents that The Oracle uses to answer questions
  */
 
 import { useState, useRef } from 'react';
@@ -90,7 +90,7 @@ export default function KnowledgeAdmin() {
           <Database className="w-16 h-16 text-primary mx-auto" />
           <h1 className="text-3xl font-display text-foreground">KNOWLEDGE BASE</h1>
           <p className="text-muted-foreground font-body">
-            Please log in to manage Zoltar's knowledge base.
+            Please log in to manage The Oracle's knowledge base.
           </p>
           <a href={getLoginUrl()}>
             <Button className="bg-primary text-primary-foreground hover:bg-primary/80">
@@ -193,11 +193,11 @@ export default function KnowledgeAdmin() {
             
             <div className="flex items-center gap-4 mb-4">
               <Database className="w-10 h-10 text-accent" />
-              <h1 className="text-4xl font-display text-foreground">ZOLTAR KNOWLEDGE BASE</h1>
+              <h1 className="text-4xl font-display text-foreground">THE ORACLE KNOWLEDGE BASE</h1>
             </div>
             <p className="text-muted-foreground font-body">
-              Upload documents that Zoltar will use to answer questions about you. 
-              Only information from these documents will be used - Zoltar never makes things up.
+              Upload documents that The Oracle will use to answer questions about you. 
+              Only information from these documents will be used - The Oracle never makes things up.
             </p>
           </div>
 
@@ -376,7 +376,7 @@ export default function KnowledgeAdmin() {
               <li>• Upload your resume, project descriptions, and bio for comprehensive coverage</li>
               <li>• Use Markdown (.md) files for better text structure</li>
               <li>• Keep documents focused - one topic per document works best</li>
-              <li>• Deactivate documents you don't want Zoltar to reference</li>
+              <li>• Deactivate documents you don't want The Oracle to reference</li>
             </ul>
           </div>
         </div>

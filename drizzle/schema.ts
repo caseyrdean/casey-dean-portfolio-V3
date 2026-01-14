@@ -69,12 +69,12 @@ export type InsertBlogAttachment = typeof blogAttachments.$inferInsert;
 
 
 // =============================================================================
-// Zoltar RAG Knowledge Base Tables
+// The Oracle RAG Knowledge Base Tables
 // =============================================================================
 
 /**
  * Knowledge base documents - stores the original uploaded documents
- * These are the source files that Zoltar uses to answer questions
+ * These are the source files that The Oracle uses to answer questions
  */
 export const knowledgeDocuments = mysqlTable("knowledge_documents", {
   id: int("id").autoincrement().primaryKey(),
@@ -136,9 +136,9 @@ export type DocumentChunk = typeof documentChunks.$inferSelect;
 export type InsertDocumentChunk = typeof documentChunks.$inferInsert;
 
 /**
- * Zoltar conversation history - stores chat sessions
+ * Oracle conversation history - stores chat sessions
  */
-export const zoltarConversations = mysqlTable("zoltar_conversations", {
+export const oracleConversations = mysqlTable("oracle_conversations", {
   id: int("id").autoincrement().primaryKey(),
   /** Session identifier for grouping messages */
   sessionId: varchar("sessionId", { length: 64 }).notNull(),
@@ -150,21 +150,21 @@ export const zoltarConversations = mysqlTable("zoltar_conversations", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
-export type ZoltarConversation = typeof zoltarConversations.$inferSelect;
-export type InsertZoltarConversation = typeof zoltarConversations.$inferInsert;
+export type OracleConversation = typeof oracleConversations.$inferSelect;
+export type InsertOracleConversation = typeof oracleConversations.$inferInsert;
 
 /**
- * Zoltar messages - stores individual messages in conversations
+ * Oracle messages - stores individual messages in conversations
  */
-export const zoltarMessages = mysqlTable("zoltar_messages", {
+export const oracleMessages = mysqlTable("oracle_messages", {
   id: int("id").autoincrement().primaryKey(),
   /** Reference to the conversation */
   conversationId: int("conversationId").notNull(),
-  /** Message role: user question or zoltar response */
-  role: mysqlEnum("role", ["user", "zoltar"]).notNull(),
+  /** Message role: user question or oracle response */
+  role: mysqlEnum("role", ["user", "oracle"]).notNull(),
   /** The message content */
   content: text("content").notNull(),
-  /** IDs of chunks used to generate this response (for zoltar messages) */
+  /** IDs of chunks used to generate this response (for oracle messages) */
   sourceChunkIds: json("sourceChunkIds").$type<number[]>(),
   /** Whether the response was based on knowledge base or "I don't know" */
   hasKnowledge: boolean("hasKnowledge"),
@@ -173,5 +173,5 @@ export const zoltarMessages = mysqlTable("zoltar_messages", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export type ZoltarMessage = typeof zoltarMessages.$inferSelect;
-export type InsertZoltarMessage = typeof zoltarMessages.$inferInsert;
+export type OracleMessage = typeof oracleMessages.$inferSelect;
+export type InsertOracleMessage = typeof oracleMessages.$inferInsert;

@@ -15,7 +15,7 @@ import {
   deleteBlogAttachment,
   getAttachmentsByPostId,
   getAttachmentById,
-  // Zoltar RAG imports
+  // Oracle RAG imports
   createKnowledgeDocument,
   updateKnowledgeDocument,
   deleteKnowledgeDocument,
@@ -29,6 +29,7 @@ import {
 } from "./db";
 import { generateRAGResponse, processDocumentForRAG } from "./rag";
 import { storagePut } from "./storage";
+import { generateSpeech } from "./_core/textToSpeech";
 import { nanoid } from "nanoid";
 
 export const appRouter = router({
@@ -191,9 +192,9 @@ export const appRouter = router({
       }),
   }),
 
-  // Zoltar RAG Fortune Teller
-  zoltar: router({
-    // Public: Send a message to Zoltar
+  // The Oracle RAG Fortune Teller
+  oracle: router({
+    // Public: Send a message to The Oracle
     chat: publicProcedure
       .input(z.object({
         message: z.string().min(1).max(1000),
@@ -220,7 +221,7 @@ export const appRouter = router({
         // Get conversation history
         const history = await getMessagesByConversationId(conversationId, 10);
         const conversationHistory = history.map(m => ({
-          role: m.role as 'user' | 'zoltar',
+          role: m.role as 'user' | 'oracle',
           content: m.content
         }));
         
@@ -229,10 +230,10 @@ export const appRouter = router({
         
         const responseTimeMs = Date.now() - startTime;
         
-        // Save Zoltar response
+        // Save Oracle response
         await createMessage({
           conversationId,
-          role: 'zoltar',
+          role: 'oracle',
           content: result.response,
           sourceChunkIds: result.sourceChunkIds,
           hasKnowledge: result.hasKnowledge,
@@ -257,6 +258,30 @@ export const appRouter = router({
           content: m.content,
           createdAt: m.createdAt,
         }));
+      }),
+
+    // Public: Generate speech for Oracle response
+    speak: publicProcedure
+      .input(z.object({
+        text: z.string().min(1).max(2000),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          // Use "onyx" voice - the deepest male voice, with slower speed for gravitas
+          const result = await generateSpeech({
+            text: input.text,
+            voice: "onyx", // Deep, sage-like male voice
+            speed: 0.85, // Slightly slower for a wise, deliberate tone
+          });
+          
+          return {
+            audioUrl: result.audioUrl,
+            contentType: result.contentType,
+          };
+        } catch (error) {
+          console.error('[Oracle TTS] Error generating speech:', error);
+          throw new Error('Failed to generate speech');
+        }
       }),
   }),
 
