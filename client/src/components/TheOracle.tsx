@@ -147,8 +147,8 @@ export default function TheOracle() {
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
-    utterance.rate = 0.85; // Slower for gravitas
-    utterance.pitch = 0.8; // Lower pitch for deeper voice
+    utterance.rate = 0.95; // Slightly slower for gravitas
+    utterance.pitch = 0.5; // Much lower pitch for very deep voice
     utterance.volume = 1.0;
 
     utterance.onstart = () => setIsSpeaking(true);
