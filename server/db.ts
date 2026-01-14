@@ -180,3 +180,191 @@ export async function getAttachmentById(id: number): Promise<BlogAttachment | un
   const result = await db.select().from(blogAttachments).where(eq(blogAttachments.id, id)).limit(1);
   return result[0];
 }
+
+
+// =============================================================================
+// Zoltar RAG Knowledge Base Queries
+// =============================================================================
+
+import { 
+  knowledgeDocuments, 
+  InsertKnowledgeDocument, 
+  KnowledgeDocument,
+  documentChunks,
+  InsertDocumentChunk,
+  DocumentChunk,
+  zoltarConversations,
+  InsertZoltarConversation,
+  ZoltarConversation,
+  zoltarMessages,
+  InsertZoltarMessage,
+  ZoltarMessage
+} from "../drizzle/schema";
+
+// Knowledge Document Queries
+
+export async function createKnowledgeDocument(doc: InsertKnowledgeDocument): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(knowledgeDocuments).values(doc);
+  return result[0].insertId;
+}
+
+export async function updateKnowledgeDocument(id: number, doc: Partial<InsertKnowledgeDocument>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(knowledgeDocuments).set(doc).where(eq(knowledgeDocuments.id, id));
+}
+
+export async function deleteKnowledgeDocument(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete chunks first
+  await db.delete(documentChunks).where(eq(documentChunks.documentId, id));
+  // Then delete the document
+  await db.delete(knowledgeDocuments).where(eq(knowledgeDocuments.id, id));
+}
+
+export async function getKnowledgeDocumentById(id: number): Promise<KnowledgeDocument | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(knowledgeDocuments).where(eq(knowledgeDocuments.id, id)).limit(1);
+  return result[0];
+}
+
+export async function getAllKnowledgeDocuments(activeOnly = true): Promise<KnowledgeDocument[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (activeOnly) {
+    return db.select().from(knowledgeDocuments)
+      .where(eq(knowledgeDocuments.active, true))
+      .orderBy(desc(knowledgeDocuments.createdAt));
+  }
+  
+  return db.select().from(knowledgeDocuments).orderBy(desc(knowledgeDocuments.createdAt));
+}
+
+// Document Chunk Queries
+
+export async function createDocumentChunks(chunks: InsertDocumentChunk[]): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (chunks.length === 0) return;
+  
+  // Insert in batches of 100
+  for (let i = 0; i < chunks.length; i += 100) {
+    const batch = chunks.slice(i, i + 100);
+    await db.insert(documentChunks).values(batch);
+  }
+}
+
+export async function getChunksByDocumentId(documentId: number): Promise<DocumentChunk[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(documentChunks)
+    .where(eq(documentChunks.documentId, documentId))
+    .orderBy(documentChunks.chunkIndex);
+}
+
+export async function getAllActiveChunks(): Promise<DocumentChunk[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get chunks only from active documents
+  const activeDocIds = await db.select({ id: knowledgeDocuments.id })
+    .from(knowledgeDocuments)
+    .where(eq(knowledgeDocuments.active, true));
+  
+  if (activeDocIds.length === 0) return [];
+  
+  const ids = activeDocIds.map(d => d.id);
+  
+  // Get all chunks from active documents
+  const allChunks: DocumentChunk[] = [];
+  for (const docId of ids) {
+    const chunks = await db.select().from(documentChunks)
+      .where(eq(documentChunks.documentId, docId));
+    allChunks.push(...chunks);
+  }
+  
+  return allChunks;
+}
+
+export async function getChunksByIds(ids: number[]): Promise<DocumentChunk[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (ids.length === 0) return [];
+  
+  const chunks: DocumentChunk[] = [];
+  for (const id of ids) {
+    const result = await db.select().from(documentChunks)
+      .where(eq(documentChunks.id, id))
+      .limit(1);
+    if (result[0]) chunks.push(result[0]);
+  }
+  
+  return chunks;
+}
+
+// Zoltar Conversation Queries
+
+export async function createConversation(conv: InsertZoltarConversation): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(zoltarConversations).values(conv);
+  return result[0].insertId;
+}
+
+export async function getConversationBySessionId(sessionId: string): Promise<ZoltarConversation | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(zoltarConversations)
+    .where(eq(zoltarConversations.sessionId, sessionId))
+    .limit(1);
+  return result[0];
+}
+
+export async function getOrCreateConversation(sessionId: string, userId?: number, ipAddress?: string): Promise<number> {
+  const existing = await getConversationBySessionId(sessionId);
+  if (existing) return existing.id;
+  
+  return createConversation({ sessionId, userId, ipAddress });
+}
+
+// Zoltar Message Queries
+
+export async function createMessage(msg: InsertZoltarMessage): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(zoltarMessages).values(msg);
+  return result[0].insertId;
+}
+
+export async function getMessagesByConversationId(conversationId: number, limit = 50): Promise<ZoltarMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(zoltarMessages)
+    .where(eq(zoltarMessages.conversationId, conversationId))
+    .orderBy(zoltarMessages.createdAt)
+    .limit(limit);
+}
+
+export async function getRecentConversations(limit = 20): Promise<ZoltarConversation[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select().from(zoltarConversations)
+    .orderBy(desc(zoltarConversations.updatedAt))
+    .limit(limit);
+}

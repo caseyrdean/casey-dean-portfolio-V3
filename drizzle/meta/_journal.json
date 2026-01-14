@@ -15,6 +15,13 @@
       "when": 1768332705621,
       "tag": "0001_groovy_lightspeed",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768415570039,
+      "tag": "0002_classy_black_bird",
+      "breakpoints": true
     }
   ]
 }

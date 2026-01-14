@@ -36,3 +36,16 @@
 - [x] Create VPC and security groups
 - [x] Create environment variables configuration
 - [x] Create deployment documentation
+
+## Zoltar RAG Fortune Teller Feature
+- [x] Design database schema for knowledge base documents
+- [x] Create document chunks table for RAG retrieval
+- [x] Create conversation history table
+- [x] Build document upload and processing API
+- [x] Implement RAG query system with LLM integration
+- [x] Create animated Zoltar character with 1980s heavy metal style
+- [x] Build chat interface with typing animations
+- [x] Add admin interface for document management
+- [x] Implement strict guardrails (no hallucination)
+- [x] Update Terraform for vector database support
+- [x] Write tests for RAG functionality

@@ -14,8 +14,20 @@ import {
   createBlogAttachment,
   deleteBlogAttachment,
   getAttachmentsByPostId,
-  getAttachmentById
+  getAttachmentById,
+  // Zoltar RAG imports
+  createKnowledgeDocument,
+  updateKnowledgeDocument,
+  deleteKnowledgeDocument,
+  getKnowledgeDocumentById,
+  getAllKnowledgeDocuments,
+  createDocumentChunks,
+  getOrCreateConversation,
+  createMessage,
+  getMessagesByConversationId,
+  getRecentConversations
 } from "./db";
+import { generateRAGResponse, processDocumentForRAG } from "./rag";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 
@@ -177,6 +189,188 @@ export const appRouter = router({
         await deleteBlogAttachment(input.id);
         return { success: true };
       }),
+  }),
+
+  // Zoltar RAG Fortune Teller
+  zoltar: router({
+    // Public: Send a message to Zoltar
+    chat: publicProcedure
+      .input(z.object({
+        message: z.string().min(1).max(1000),
+        sessionId: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const startTime = Date.now();
+        
+        // Get or create conversation
+        const ipAddress = ctx.req.headers['x-forwarded-for'] as string || ctx.req.socket?.remoteAddress;
+        const conversationId = await getOrCreateConversation(
+          input.sessionId,
+          ctx.user?.id,
+          ipAddress
+        );
+        
+        // Save user message
+        await createMessage({
+          conversationId,
+          role: 'user',
+          content: input.message,
+        });
+        
+        // Get conversation history
+        const history = await getMessagesByConversationId(conversationId, 10);
+        const conversationHistory = history.map(m => ({
+          role: m.role as 'user' | 'zoltar',
+          content: m.content
+        }));
+        
+        // Generate RAG response
+        const result = await generateRAGResponse(input.message, conversationHistory.slice(0, -1));
+        
+        const responseTimeMs = Date.now() - startTime;
+        
+        // Save Zoltar response
+        await createMessage({
+          conversationId,
+          role: 'zoltar',
+          content: result.response,
+          sourceChunkIds: result.sourceChunkIds,
+          hasKnowledge: result.hasKnowledge,
+          responseTimeMs,
+        });
+        
+        return {
+          response: result.response,
+          hasKnowledge: result.hasKnowledge,
+          responseTimeMs,
+        };
+      }),
+
+    // Public: Get conversation history
+    getHistory: publicProcedure
+      .input(z.object({ sessionId: z.string() }))
+      .query(async ({ input }) => {
+        const conv = await getOrCreateConversation(input.sessionId);
+        const messages = await getMessagesByConversationId(conv, 50);
+        return messages.map(m => ({
+          role: m.role,
+          content: m.content,
+          createdAt: m.createdAt,
+        }));
+      }),
+  }),
+
+  // Knowledge Base Admin
+  knowledge: router({
+    // Admin: List all documents
+    list: adminProcedure.query(async () => {
+      return getAllKnowledgeDocuments(false);
+    }),
+
+    // Admin: Get single document
+    getById: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return getKnowledgeDocumentById(input.id);
+      }),
+
+    // Admin: Upload and process document
+    upload: adminProcedure
+      .input(z.object({
+        filename: z.string(),
+        title: z.string(),
+        description: z.string().optional(),
+        mimeType: z.string(),
+        data: z.string(), // base64 encoded
+        docType: z.enum(["resume", "project", "bio", "skills", "experience", "other"]).default("other"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { filename, title, description, mimeType, data, docType } = input;
+        
+        // Decode base64 data
+        const buffer = Buffer.from(data, "base64");
+        const rawContent = buffer.toString('utf-8');
+        
+        // Generate unique file key
+        const uniqueId = nanoid(10);
+        const fileKey = `knowledge/${docType}/${uniqueId}-${filename}`;
+        
+        // Upload to S3
+        const { url } = await storagePut(fileKey, buffer, mimeType);
+        
+        // Create document record
+        const docId = await createKnowledgeDocument({
+          filename,
+          title,
+          description: description || null,
+          mimeType,
+          size: buffer.length,
+          url,
+          fileKey,
+          docType,
+          rawContent,
+          uploadedBy: ctx.user.id,
+        });
+        
+        // Process document into chunks
+        const { chunkCount, chunks } = await processDocumentForRAG(docId, rawContent, mimeType);
+        
+        // Save chunks to database
+        if (chunks.length > 0) {
+          await createDocumentChunks(
+            chunks.map((c, i) => ({
+              documentId: docId,
+              content: c.content,
+              chunkIndex: i,
+            }))
+          );
+        }
+        
+        // Update document with chunk count
+        await updateKnowledgeDocument(docId, { chunkCount });
+        
+        return { 
+          id: docId, 
+          url, 
+          chunkCount,
+          title,
+        };
+      }),
+
+    // Admin: Toggle document active status
+    toggleActive: adminProcedure
+      .input(z.object({ id: z.number(), active: z.boolean() }))
+      .mutation(async ({ input }) => {
+        await updateKnowledgeDocument(input.id, { active: input.active });
+        return { success: true };
+      }),
+
+    // Admin: Update document metadata
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        docType: z.enum(["resume", "project", "bio", "skills", "experience", "other"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await updateKnowledgeDocument(id, data);
+        return { success: true };
+      }),
+
+    // Admin: Delete document
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteKnowledgeDocument(input.id);
+        return { success: true };
+      }),
+
+    // Admin: View recent conversations
+    conversations: adminProcedure.query(async () => {
+      return getRecentConversations(50);
+    }),
   }),
 });
 

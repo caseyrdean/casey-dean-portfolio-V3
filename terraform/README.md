@@ -268,3 +268,110 @@ For issues with this infrastructure:
 3. Verify Terraform state with `terraform show`
 
 For application issues, refer to the main project README.
+
+
+```bash
+terraform apply
+```
+
+Type `yes` when prompted to confirm.
+
+### Step 5: Get Outputs
+
+```bash
+terraform output
+```
+
+This will display the Amplify app URL, database endpoint, and S3 bucket name.
+
+## Resources Created
+
+| Resource | Description |
+|----------|-------------|
+| VPC | Virtual Private Cloud with public/private subnets |
+| RDS MySQL | Database for blog posts, users, and Zoltar knowledge base |
+| S3 Bucket | File storage for uploads (images, documents, videos) |
+| AWS Amplify | Full-stack hosting with CI/CD from GitHub |
+| IAM Roles | Service roles for Amplify and S3 access |
+| Security Groups | Network security for RDS and VPC |
+
+## Zoltar RAG System
+
+The Zoltar feature is an AI-powered fortune teller that answers questions about Casey Dean using a RAG (Retrieval-Augmented Generation) system. The infrastructure supports:
+
+### Database Tables
+
+- **knowledge_documents** - Stores uploaded documents (resumes, project descriptions, etc.)
+- **document_chunks** - Text chunks for efficient retrieval
+- **zoltar_conversations** - Conversation sessions
+- **zoltar_messages** - Individual messages with source references
+
+### How It Works
+
+1. Admin uploads documents (Markdown, text, JSON) via `/admin/knowledge`
+2. Documents are stored in S3 and processed into searchable chunks
+3. When users ask Zoltar questions, the system:
+   - Searches for relevant document chunks
+   - Sends context + question to LLM
+   - Returns answer grounded in your documents only
+4. If no relevant information is found, Zoltar says "I don't know"
+
+### Security Features
+
+- Only admin users can upload/manage documents
+- Zoltar never invents information - only uses approved documents
+- All conversations are logged for review
+- Documents can be activated/deactivated without deletion
+
+## Environment Variables
+
+The Amplify app requires these environment variables (automatically set by Terraform):
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | MySQL connection string |
+| `JWT_SECRET` | Secret for session tokens |
+| `AWS_S3_BUCKET` | S3 bucket name for uploads |
+| `AWS_REGION` | AWS region |
+
+## Cost Estimate
+
+| Resource | Monthly Cost (Estimate) |
+|----------|------------------------|
+| RDS db.t3.micro | ~$15-20 |
+| S3 (10GB) | ~$0.25 |
+| Amplify (basic) | ~$0-5 |
+| Data Transfer | ~$1-5 |
+| **Total** | **~$20-30/month** |
+
+*Costs vary based on usage. RDS is the primary cost driver.*
+
+## Cleanup
+
+To destroy all resources:
+
+```bash
+terraform destroy
+```
+
+**Warning:** This will delete all data including the database. Make backups first!
+
+## Troubleshooting
+
+### Amplify Build Fails
+
+1. Check GitHub token has `repo` scope
+2. Verify repository exists and is accessible
+3. Check Amplify console for build logs
+
+### Database Connection Issues
+
+1. Ensure RDS is publicly accessible (for Amplify)
+2. Check security group allows inbound on port 3306
+3. Verify DATABASE_URL format is correct
+
+### S3 Upload Fails
+
+1. Check IAM role has proper S3 permissions
+2. Verify bucket name is globally unique
+3. Check CORS configuration if uploading from browser

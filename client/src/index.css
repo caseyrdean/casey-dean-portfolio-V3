@@ -582,3 +582,121 @@
     color: oklch(0.75 0.2 330);
   }
 }
+
+
+/* =============================================================================
+   Zoltar Fortune Teller Styles
+   ============================================================================= */
+
+/* Slow bounce animation for Zoltar button */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Slide up animation for chat modal */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+/* Crystal ball glow pulse */
+@keyframes crystal-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px oklch(0.7 0.3 195 / 50%),
+                0 0 40px oklch(0.7 0.35 328 / 30%),
+                inset 0 0 20px oklch(0.7 0.3 195 / 20%);
+  }
+  50% {
+    box-shadow: 0 0 30px oklch(0.7 0.3 195 / 70%),
+                0 0 60px oklch(0.7 0.35 328 / 50%),
+                inset 0 0 30px oklch(0.7 0.3 195 / 30%);
+  }
+}
+
+.crystal-glow {
+  animation: crystal-glow 3s ease-in-out infinite;
+}
+
+/* Mystical text shimmer */
+@keyframes mystical-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.mystical-text {
+  background: linear-gradient(
+    90deg,
+    oklch(0.7 0.3 195) 0%,
+    oklch(0.7 0.35 328) 25%,
+    oklch(0.85 0.25 145) 50%,
+    oklch(0.7 0.35 328) 75%,
+    oklch(0.7 0.3 195) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: mystical-shimmer 3s linear infinite;
+}
+
+/* Zoltar message bubble styling */
+.zoltar-message {
+  position: relative;
+}
+
+.zoltar-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    oklch(0.7 0.35 328 / 5%) 0%,
+    transparent 50%,
+    oklch(0.7 0.3 195 / 5%) 100%
+  );
+  pointer-events: none;
+}
+
+/* Scrollbar styling for chat */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0.3 195 / 30%);
+  border-radius: 0;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.7 0.3 195 / 50%);
+}

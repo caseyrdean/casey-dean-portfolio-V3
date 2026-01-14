@@ -66,3 +66,112 @@ export const blogAttachments = mysqlTable("blog_attachments", {
 
 export type BlogAttachment = typeof blogAttachments.$inferSelect;
 export type InsertBlogAttachment = typeof blogAttachments.$inferInsert;
+
+
+// =============================================================================
+// Zoltar RAG Knowledge Base Tables
+// =============================================================================
+
+/**
+ * Knowledge base documents - stores the original uploaded documents
+ * These are the source files that Zoltar uses to answer questions
+ */
+export const knowledgeDocuments = mysqlTable("knowledge_documents", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Original filename */
+  filename: varchar("filename", { length: 500 }).notNull(),
+  /** Document title for display */
+  title: varchar("title", { length: 500 }).notNull(),
+  /** Brief description of the document content */
+  description: text("description"),
+  /** MIME type of the original file */
+  mimeType: varchar("mimeType", { length: 100 }).notNull(),
+  /** File size in bytes */
+  size: int("size").notNull(),
+  /** S3 URL to the original file */
+  url: varchar("url", { length: 1000 }).notNull(),
+  /** S3 file key */
+  fileKey: varchar("fileKey", { length: 500 }).notNull(),
+  /** Document type category */
+  docType: mysqlEnum("docType", ["resume", "project", "bio", "skills", "experience", "other"]).default("other").notNull(),
+  /** Whether this document is active for RAG queries */
+  active: boolean("active").default(true).notNull(),
+  /** Raw text content extracted from the document */
+  rawContent: text("rawContent"),
+  /** Number of chunks created from this document */
+  chunkCount: int("chunkCount").default(0),
+  /** User who uploaded this document */
+  uploadedBy: int("uploadedBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type KnowledgeDocument = typeof knowledgeDocuments.$inferSelect;
+export type InsertKnowledgeDocument = typeof knowledgeDocuments.$inferInsert;
+
+/**
+ * Document chunks - stores text chunks with embeddings for RAG retrieval
+ * Each document is split into smaller chunks for better semantic search
+ */
+export const documentChunks = mysqlTable("document_chunks", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Reference to the parent document */
+  documentId: int("documentId").notNull(),
+  /** The text content of this chunk */
+  content: text("content").notNull(),
+  /** Chunk index within the document (for ordering) */
+  chunkIndex: int("chunkIndex").notNull(),
+  /** Character offset where this chunk starts in the original document */
+  startOffset: int("startOffset"),
+  /** Character offset where this chunk ends */
+  endOffset: int("endOffset"),
+  /** JSON-serialized embedding vector (for semantic search) */
+  embedding: json("embedding").$type<number[]>(),
+  /** Token count for this chunk */
+  tokenCount: int("tokenCount"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DocumentChunk = typeof documentChunks.$inferSelect;
+export type InsertDocumentChunk = typeof documentChunks.$inferInsert;
+
+/**
+ * Zoltar conversation history - stores chat sessions
+ */
+export const zoltarConversations = mysqlTable("zoltar_conversations", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Session identifier for grouping messages */
+  sessionId: varchar("sessionId", { length: 64 }).notNull(),
+  /** User ID if authenticated, null for anonymous */
+  userId: int("userId"),
+  /** IP address for rate limiting */
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ZoltarConversation = typeof zoltarConversations.$inferSelect;
+export type InsertZoltarConversation = typeof zoltarConversations.$inferInsert;
+
+/**
+ * Zoltar messages - stores individual messages in conversations
+ */
+export const zoltarMessages = mysqlTable("zoltar_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Reference to the conversation */
+  conversationId: int("conversationId").notNull(),
+  /** Message role: user question or zoltar response */
+  role: mysqlEnum("role", ["user", "zoltar"]).notNull(),
+  /** The message content */
+  content: text("content").notNull(),
+  /** IDs of chunks used to generate this response (for zoltar messages) */
+  sourceChunkIds: json("sourceChunkIds").$type<number[]>(),
+  /** Whether the response was based on knowledge base or "I don't know" */
+  hasKnowledge: boolean("hasKnowledge"),
+  /** Response generation time in ms */
+  responseTimeMs: int("responseTimeMs"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ZoltarMessage = typeof zoltarMessages.$inferSelect;
+export type InsertZoltarMessage = typeof zoltarMessages.$inferInsert;

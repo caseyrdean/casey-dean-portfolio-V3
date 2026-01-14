@@ -10,6 +10,8 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdmin from "./pages/BlogAdmin";
+import KnowledgeAdmin from "./pages/KnowledgeAdmin";
+import Zoltar from "./components/Zoltar";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
  * Dark theme with electric cyan, magenta, and toxic green neon accents
@@ -24,6 +26,7 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/admin/blog"} component={BlogAdmin} />
+      <Route path={"/admin/knowledge"} component={KnowledgeAdmin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -38,6 +41,7 @@ function App() {
           <Toaster />
           <VHSGlitch />
           <Router />
+          <Zoltar />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
