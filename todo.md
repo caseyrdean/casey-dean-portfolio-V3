@@ -60,3 +60,6 @@
 - [x] Add text-to-speech API endpoint for Oracle responses
 - [x] Integrate audio playback in TheOracle component
 - [x] Configure deep, sage-like voice (Dumbledore style)
+
+## Bug Fixes
+- [x] Fix TTS API failure for Oracle voice synthesis (switched to Web Speech API)

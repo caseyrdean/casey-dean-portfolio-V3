@@ -29,7 +29,6 @@ import {
 } from "./db";
 import { generateRAGResponse, processDocumentForRAG } from "./rag";
 import { storagePut } from "./storage";
-import { generateSpeech } from "./_core/textToSpeech";
 import { nanoid } from "nanoid";
 
 export const appRouter = router({
@@ -258,30 +257,6 @@ export const appRouter = router({
           content: m.content,
           createdAt: m.createdAt,
         }));
-      }),
-
-    // Public: Generate speech for Oracle response
-    speak: publicProcedure
-      .input(z.object({
-        text: z.string().min(1).max(2000),
-      }))
-      .mutation(async ({ input }) => {
-        try {
-          // Use "onyx" voice - the deepest male voice, with slower speed for gravitas
-          const result = await generateSpeech({
-            text: input.text,
-            voice: "onyx", // Deep, sage-like male voice
-            speed: 0.85, // Slightly slower for a wise, deliberate tone
-          });
-          
-          return {
-            audioUrl: result.audioUrl,
-            contentType: result.contentType,
-          };
-        } catch (error) {
-          console.error('[Oracle TTS] Error generating speech:', error);
-          throw new Error('Failed to generate speech');
-        }
       }),
   }),
 

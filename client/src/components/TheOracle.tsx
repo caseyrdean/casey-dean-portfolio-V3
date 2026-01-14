@@ -4,13 +4,13 @@
  * 
  * A mystical seer that answers questions about Casey Dean
  * using RAG (Retrieval-Augmented Generation) from approved documents.
- * Features voice synthesis with a deep, sage-like voice.
+ * Features voice synthesis with a deep, sage-like voice using Web Speech API.
  */
 
 import { useState, useEffect, useRef } from 'react';
 import { trpc } from '@/lib/trpc';
 import { nanoid } from 'nanoid';
-import { Send, Sparkles, X, Volume2, VolumeX, Loader2 } from 'lucide-react';
+import { Send, Sparkles, X, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Generate or retrieve session ID
@@ -28,8 +28,10 @@ interface Message {
   role: 'user' | 'oracle';
   content: string;
   isTyping?: boolean;
-  audioUrl?: string;
 }
+
+// Check if Web Speech API is available
+const isSpeechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
 export default function TheOracle() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,14 +40,63 @@ export default function TheOracle() {
   const [isThinking, setIsThinking] = useState(false);
   const [sessionId] = useState(getSessionId);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const chatMutation = trpc.oracle.chat.useMutation();
-  const speakMutation = trpc.oracle.speak.useMutation();
+
+  // Initialize voice selection - prefer deep male voices
+  useEffect(() => {
+    if (!isSpeechSupported) return;
+
+    const loadVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) return;
+
+      // Priority order for deep male voices (Dumbledore-like)
+      const preferredVoices = [
+        'Google UK English Male',
+        'Microsoft David',
+        'Daniel',
+        'Alex',
+        'Fred',
+        'Thomas',
+        'en-GB',
+        'en-US',
+      ];
+
+      // Find the best matching voice
+      let bestVoice: SpeechSynthesisVoice | null = null;
+      
+      for (const preferred of preferredVoices) {
+        const match = voices.find(v => 
+          v.name.toLowerCase().includes(preferred.toLowerCase()) ||
+          v.lang.includes(preferred)
+        );
+        if (match) {
+          bestVoice = match;
+          break;
+        }
+      }
+
+      // Fallback to first English voice or any voice
+      if (!bestVoice) {
+        bestVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+      }
+
+      setSelectedVoice(bestVoice);
+    };
+
+    // Load voices immediately and on change
+    loadVoices();
+    speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -68,61 +119,55 @@ export default function TheOracle() {
         content: welcomeMessage
       }]);
       
-      // Generate and play welcome audio if voice is enabled
-      if (voiceEnabled) {
-        generateAndPlayAudio(welcomeMessage);
+      // Speak welcome message if voice is enabled
+      if (voiceEnabled && isSpeechSupported) {
+        setTimeout(() => speakText(welcomeMessage), 500);
       }
     }
   }, [isOpen, messages.length, voiceEnabled]);
 
-  // Cleanup audio on unmount
+  // Cleanup speech on unmount
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
+      if (isSpeechSupported) {
+        speechSynthesis.cancel();
       }
     };
   }, []);
 
-  const generateAndPlayAudio = async (text: string) => {
-    if (!voiceEnabled) return;
+  const speakText = (text: string) => {
+    if (!isSpeechSupported || !voiceEnabled) return;
+
+    // Cancel any ongoing speech
+    speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
     
-    try {
-      setIsGeneratingAudio(true);
-      const result = await speakMutation.mutateAsync({ text });
-      
-      // Create and play audio
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      
-      const audio = new Audio(result.audioUrl);
-      audioRef.current = audio;
-      
-      audio.onplay = () => setIsPlaying(true);
-      audio.onended = () => setIsPlaying(false);
-      audio.onerror = () => setIsPlaying(false);
-      
-      await audio.play();
-    } catch (error) {
-      console.error('Failed to generate or play audio:', error);
-    } finally {
-      setIsGeneratingAudio(false);
+    // Configure for a deep, sage-like voice
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
     }
+    utterance.rate = 0.85; // Slower for gravitas
+    utterance.pitch = 0.8; // Lower pitch for deeper voice
+    utterance.volume = 1.0;
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    speechSynthesis.speak(utterance);
   };
 
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying(false);
+  const stopSpeaking = () => {
+    if (isSpeechSupported) {
+      speechSynthesis.cancel();
+      setIsSpeaking(false);
     }
   };
 
   const toggleVoice = () => {
-    if (isPlaying) {
-      stopAudio();
+    if (isSpeaking) {
+      stopSpeaking();
     }
     setVoiceEnabled(!voiceEnabled);
   };
@@ -131,8 +176,8 @@ export default function TheOracle() {
     e.preventDefault();
     if (!input.trim() || isThinking) return;
 
-    // Stop any playing audio
-    stopAudio();
+    // Stop any ongoing speech
+    stopSpeaking();
 
     const userMessage = input.trim();
     setInput('');
@@ -154,9 +199,9 @@ export default function TheOracle() {
         return [...newMessages, { role: 'oracle', content: result.response }];
       });
 
-      // Generate and play audio for the response
-      if (voiceEnabled) {
-        generateAndPlayAudio(result.response);
+      // Speak the response
+      if (voiceEnabled && isSpeechSupported) {
+        speakText(result.response);
       }
     } catch (error) {
       const errorMessage = "The mystical energies are disturbed... I cannot provide a reading at this moment. Please try again later.";
@@ -222,29 +267,29 @@ export default function TheOracle() {
               </div>
               <div className="flex items-center gap-2">
                 {/* Voice toggle button */}
-                <button
-                  onClick={toggleVoice}
-                  className={`w-8 h-8 flex items-center justify-center border transition-colors ${
-                    voiceEnabled 
-                      ? 'border-accent text-accent hover:bg-accent/20' 
-                      : 'border-muted-foreground/50 text-muted-foreground hover:bg-muted/20'
-                  }`}
-                  title={voiceEnabled ? 'Voice enabled' : 'Voice disabled'}
-                >
-                  {isGeneratingAudio ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : isPlaying ? (
-                    <Volume2 className="w-4 h-4 animate-pulse" />
-                  ) : voiceEnabled ? (
-                    <Volume2 className="w-4 h-4" />
-                  ) : (
-                    <VolumeX className="w-4 h-4" />
-                  )}
-                </button>
+                {isSpeechSupported && (
+                  <button
+                    onClick={toggleVoice}
+                    className={`w-8 h-8 flex items-center justify-center border transition-colors ${
+                      voiceEnabled 
+                        ? 'border-accent text-accent hover:bg-accent/20' 
+                        : 'border-muted-foreground/50 text-muted-foreground hover:bg-muted/20'
+                    }`}
+                    title={voiceEnabled ? 'Voice enabled' : 'Voice disabled'}
+                  >
+                    {isSpeaking ? (
+                      <Volume2 className="w-4 h-4 animate-pulse" />
+                    ) : voiceEnabled ? (
+                      <Volume2 className="w-4 h-4" />
+                    ) : (
+                      <VolumeX className="w-4 h-4" />
+                    )}
+                  </button>
+                )}
                 {/* Close button */}
                 <button
                   onClick={() => {
-                    stopAudio();
+                    stopSpeaking();
                     setIsOpen(false);
                   }}
                   className="w-8 h-8 flex items-center justify-center border border-primary/50 hover:border-primary hover:bg-primary/20 transition-colors"
@@ -272,7 +317,7 @@ export default function TheOracle() {
                       <div className="flex items-center gap-2 mb-2">
                         <Sparkles className="w-4 h-4 text-secondary" />
                         <span className="text-xs font-subhead text-secondary tracking-wider">THE ORACLE SPEAKS</span>
-                        {isPlaying && index === messages.length - 1 && (
+                        {isSpeaking && index === messages.length - 1 && (
                           <Volume2 className="w-3 h-3 text-accent animate-pulse ml-auto" />
                         )}
                       </div>
@@ -320,7 +365,7 @@ export default function TheOracle() {
               </div>
               <p className="mt-2 text-xs text-muted-foreground font-body text-center">
                 The Oracle only knows what's in the sacred scrolls
-                {voiceEnabled && <span className="text-accent"> • Voice enabled</span>}
+                {voiceEnabled && isSpeechSupported && <span className="text-accent"> • Voice enabled</span>}
               </p>
             </form>
 
