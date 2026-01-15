@@ -98,6 +98,18 @@ variable "owner_name" {
   default     = "Casey Dean"
 }
 
+variable "owner_open_id" {
+  description = "Owner OpenID for authentication"
+  type        = string
+  default     = ""
+}
+
+variable "openai_api_key" {
+  description = "OpenAI API key for The Oracle AI assistant"
+  type        = string
+  sensitive   = true
+}
+
 # =============================================================================
 # OAuth Configuration (Manus)
 # =============================================================================

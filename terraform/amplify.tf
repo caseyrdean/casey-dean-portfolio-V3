@@ -19,35 +19,45 @@ resource "aws_amplify_app" "main" {
   # IAM service role
   iam_service_role_arn = aws_iam_role.amplify.arn
 
-  # Build specification
+  # Build specification for full-stack Express + React application
+  # Uses WEB_COMPUTE platform for SSR support
   build_spec = <<-EOT
     version: 1
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm install -g pnpm
-            - pnpm install
-        build:
-          commands:
-            - pnpm run build
-      artifacts:
-        baseDirectory: dist
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - node_modules/**/*
-          - .pnpm-store/**/*
-    backend:
-      phases:
-        build:
-          commands:
-            - pnpm run build
-      artifacts:
-        baseDirectory: dist
-        files:
-          - '**/*'
+    applications:
+      - appRoot: /
+        frontend:
+          phases:
+            preBuild:
+              commands:
+                - corepack enable
+                - corepack prepare pnpm@10.4.1 --activate
+                - pnpm install --frozen-lockfile
+            build:
+              commands:
+                - pnpm run build
+          artifacts:
+            baseDirectory: dist/public
+            files:
+              - '**/*'
+          cache:
+            paths:
+              - node_modules/**/*
+              - .pnpm-store/**/*
+        backend:
+          phases:
+            preBuild:
+              commands:
+                - corepack enable
+                - corepack prepare pnpm@10.4.1 --activate
+                - pnpm install --frozen-lockfile
+            build:
+              commands:
+                - pnpm run build
+          artifacts:
+            baseDirectory: dist
+            files:
+              - index.js
+              - public/**/*
   EOT
 
   # Environment variables

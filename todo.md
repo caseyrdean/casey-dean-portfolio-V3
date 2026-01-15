@@ -117,3 +117,14 @@
 - [x] Add route for /admin/projects in App.tsx
 - [x] Test Project Admin CRUD operations
 - [x] Fix Oracle not finding database information (cache issue resolved)
+
+## AWS Amplify Production Deployment
+- [x] Audit codebase for build errors and TypeScript issues
+- [x] Create amplify.yml build specification
+- [x] Configure production environment variables
+- [x] Ensure proper build output structure
+- [x] Update Terraform document for AWS alignment
+- [x] Test production build locally (pnpm build successful)
+- [x] Verify all database connections work
+- [x] Verify Oracle functionality works
+- [x] Final checkpoint for deployment

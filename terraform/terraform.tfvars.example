@@ -26,8 +26,12 @@ github_access_token = "ghp_YOUR_GITHUB_TOKEN_HERE"
 jwt_secret = "YOUR_32_CHARACTER_MINIMUM_SECRET_KEY_HERE"
 
 # Owner Information
-owner_email = "casey.r.dean1990@gmail.com"
-owner_name  = "Casey Dean"
+owner_email   = "casey.r.dean1990@gmail.com"
+owner_name    = "Casey Dean"
+owner_open_id = ""  # Your OpenID for authentication
+
+# OpenAI Configuration (for The Oracle AI assistant)
+openai_api_key = "sk-YOUR_OPENAI_API_KEY_HERE"
 
 # OAuth Configuration (Manus - leave empty if not using)
 oauth_server_url = ""

@@ -78,6 +78,7 @@ locals {
     DATABASE_URL                = local.database_url
     JWT_SECRET                  = var.jwt_secret
     OWNER_NAME                  = var.owner_name
+    OWNER_OPEN_ID               = var.owner_open_id
     OWNER_EMAIL                 = var.owner_email
     OAUTH_SERVER_URL            = var.oauth_server_url
     VITE_OAUTH_PORTAL_URL       = var.oauth_portal_url
@@ -85,5 +86,6 @@ locals {
     AWS_S3_BUCKET               = local.s3_bucket_name
     AWS_S3_REGION               = var.aws_region
     VITE_APP_TITLE              = "Casey Dean - AWS Solutions Architect"
+    OPENAI_API_KEY              = var.openai_api_key
   }
 }
