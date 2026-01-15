@@ -137,8 +137,12 @@ export default function TheOracle() {
 
   // Transform text to be more mystical
   const transformToMystical = (text: string): string => {
-    // Keep text natural without dramatic pauses or emphasis
-    return text;
+    // Remove special characters and markdown formatting for clean speech
+    // Keep the text natural without dramatic pauses or emphasis
+    return text
+      .replace(/[*_`~#\[\]()>|\-]/g, '') // Remove markdown and special characters
+      .replace(/\s+/g, ' ') // Collapse multiple spaces
+      .trim();
   };
 
   const speakText = (text: string) => {

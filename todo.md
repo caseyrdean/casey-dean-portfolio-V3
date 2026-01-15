@@ -88,3 +88,6 @@
 - [x] Ensure no hardcoded keys or PII
 - [x] Configure API key and test with OpenAI
 - [x] Fix SDK baseURL issue for service account tokens
+
+## Oracle Voice Improvements
+- [x] Remove special characters from spoken text (asterisks, markdown formatting, etc.)
