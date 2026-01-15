@@ -72,3 +72,6 @@
 
 ## Voice Adjustments
 - [x] Reduce dramatic pauses in Oracle voice for more natural speech
+
+## Admin Panel Improvements
+- [x] Add toggle switch in Blog Admin header to switch between blog and Oracle knowledge base editor

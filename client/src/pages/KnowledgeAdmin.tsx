@@ -186,10 +186,20 @@ export default function KnowledgeAdmin() {
         <div className="container max-w-4xl">
           {/* Header */}
           <div className="mb-12">
-            <Link href="/admin/blog" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-6">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="font-subhead tracking-wider">BACK TO BLOG ADMIN</span>
-            </Link>
+            <div className="flex items-center justify-between mb-6">
+              <Link href="/admin/blog" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+                <span className="font-subhead tracking-wider">BACK TO BLOG ADMIN</span>
+              </Link>
+              <Button
+                onClick={() => window.location.href = '/admin/blog'}
+                variant="outline"
+                className="font-subhead tracking-wider border-secondary text-secondary hover:bg-secondary/10"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                BLOG POSTS
+              </Button>
+            </div>
             
             <div className="flex items-center gap-4 mb-4">
               <Database className="w-10 h-10 text-accent" />

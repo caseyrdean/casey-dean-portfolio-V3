@@ -25,7 +25,8 @@ import {
   FileText, 
   Video,
   ArrowLeft,
-  Loader2
+  Loader2,
+  MessageCircle
 } from "lucide-react";
 
 function slugify(text: string): string {
@@ -261,13 +262,23 @@ export default function BlogAdmin() {
             <h1 className="text-4xl font-display text-foreground">BLOG ADMIN</h1>
             <p className="text-muted-foreground font-body mt-2">Manage your blog posts and uploads</p>
           </div>
-          <Button 
-            onClick={() => { resetForm(); setIsCreating(true); setActiveTab("editor"); }}
-            className="font-subhead tracking-wider"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            NEW POST
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => setLocation("/admin/knowledge")}
+              variant="outline"
+              className="font-subhead tracking-wider border-secondary text-secondary hover:bg-secondary/10"
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              ORACLE KNOWLEDGE
+            </Button>
+            <Button 
+              onClick={() => { resetForm(); setIsCreating(true); setActiveTab("editor"); }}
+              className="font-subhead tracking-wider"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              NEW POST
+            </Button>
+          </div>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
