@@ -97,3 +97,8 @@
 
 ## Oracle Knowledge Sources
 - [x] Add website content as reference source with equal weight to LinkedIn
+
+## Dynamic Website Content Scraping
+- [x] Implement blog post scraping for Oracle
+- [x] Implement project page scraping for Oracle
+- [x] Integrate scraped content into RAG system

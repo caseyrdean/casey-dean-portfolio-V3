@@ -368,3 +368,17 @@ export async function getRecentConversations(limit = 20): Promise<OracleConversa
     .orderBy(desc(oracleConversations.updatedAt))
     .limit(limit);
 }
+
+/**
+ * Get all published blog posts with their full content for Oracle scraping
+ */
+export async function getPublishedBlogPostsForOracle(): Promise<{ title: string; slug: string; content: string; category?: string; tags?: string[] }[]> {
+  const posts = await getPublishedBlogPosts();
+  return posts.map(post => ({
+    title: post.title,
+    slug: post.slug,
+    content: post.content,
+    category: post.category || undefined,
+    tags: post.tags || undefined
+  }));
+}

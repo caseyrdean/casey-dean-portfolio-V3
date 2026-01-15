@@ -14,6 +14,7 @@ import {
   getAllKnowledgeDocuments
 } from "./db";
 import { DocumentChunk } from "../drizzle/schema";
+import { fetchWebsiteContent } from "./website-scraper";
 
 // Initialize OpenAI client (server-side only, API key from environment)
 // Using GPT-3.5-turbo as it's the most cost-effective model with good performance
@@ -33,10 +34,6 @@ const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/caseyrdean/';
 // Cache for LinkedIn data (refresh every hour)
 let linkedInCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
 const LINKEDIN_CACHE_TTL = 60 * 60 * 1000; // 1 hour
-
-// Cache for website content (refresh every hour)
-let websiteCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
-const WEBSITE_CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 // =============================================================================
 // Text Chunking
@@ -258,29 +255,7 @@ Key Skills: EC2, S3, Lambda, VPC, CloudFormation, Terraform, Python, TypeScript,
   }
 }
 
-/**
- * Fetch website content (all pages and blog posts)
- * Returns formatted content from the website
- */
-async function fetchWebsiteContent(): Promise<string | null> {
-  const now = Date.now();
-  
-  if (websiteCache.data && (now - websiteCache.timestamp) < WEBSITE_CACHE_TTL) {
-    console.log('[RAG] Using cached website content');
-    return websiteCache.data;
-  }
-  
-  try {
-    console.log('[RAG] Fetching website content...');
-    const websiteContent = `WEBSITE CONTENT: Casey Dean Portfolio\n\nThis website showcases Casey Dean's professional work, projects, and expertise.\nThe site includes:\n- Home page with professional summary\n- Projects section with case studies\n- Blog posts on cloud architecture and AI\n- Credentials and experience timeline\n- Contact information\n\nNote: Website content is dynamically generated from the site's pages and blog posts.`;
-    
-    websiteCache = { data: websiteContent, timestamp: now };
-    return websiteContent;
-  } catch (error) {
-    console.error('[RAG] Failed to fetch website content:', error);
-    return null;
-  }
-}
+
 
 /**
  * Get all knowledge from database documents (full content, not just chunks)
