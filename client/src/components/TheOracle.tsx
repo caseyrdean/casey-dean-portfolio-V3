@@ -137,16 +137,8 @@ export default function TheOracle() {
 
   // Transform text to be more mystical
   const transformToMystical = (text: string): string => {
-    // Add mystical language patterns with subtle emphasis
-    let mystical = text
-      // Add subtle emphasis to key phrases (single dots)
-      .replace(/\b(know|reveal|see|understand|truth|spirit|sacred|ancient|power|wisdom)\b/gi, '.$1.')
-      // Minimal pauses for natural flow
-      .replace(/\. /g, '. ') // Single space for natural pacing
-      .replace(/\? /g, '? ')
-      .replace(/\! /g, '! ');
-    
-    return mystical;
+    // Keep text natural without dramatic pauses or emphasis
+    return text;
   };
 
   const speakText = (text: string) => {

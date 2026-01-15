@@ -69,3 +69,6 @@
 - [x] Fix database schema error for sourceChunkIds column type
 - [x] Fix database content column size for long messages (changed to LONGTEXT)
 - [x] Fix role enum missing 'oracle' value (was still 'zoltar' in database)
+
+## Voice Adjustments
+- [x] Reduce dramatic pauses in Oracle voice for more natural speech
