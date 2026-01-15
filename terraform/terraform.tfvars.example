@@ -1,44 +1,85 @@
 # =============================================================================
-# Casey Dean Portfolio - Terraform Variables Example
+# Casey Dean Portfolio - Terraform Variables
 # =============================================================================
-# Copy this file to terraform.tfvars and fill in your values.
-# NEVER commit terraform.tfvars to version control!
+# INSTRUCTIONS:
+# 1. Copy this file to terraform.tfvars: cp terraform.tfvars.example terraform.tfvars
+# 2. Fill in all values marked with "CHANGE_ME"
+# 3. NEVER commit terraform.tfvars to version control!
 #
-# NOTE: This configuration is fully AWS-independent with no Manus dependencies.
+# This configuration is fully AWS-independent with NO external OAuth dependencies.
+# Authentication uses simple password-based admin login.
 # =============================================================================
 
+# =============================================================================
 # AWS Configuration
+# =============================================================================
+
 aws_region   = "us-east-1"
 project_name = "casey-dean-portfolio"
 environment  = "prod"
 
-# Database Configuration
-db_instance_class    = "db.t3.micro"    # Free tier eligible
-db_allocated_storage = 20               # GB
+# =============================================================================
+# Database Configuration (Amazon RDS MySQL)
+# =============================================================================
+# db.t3.micro is free tier eligible for 12 months
+# Minimum storage is 20 GB
+
+db_instance_class    = "db.t3.micro"
+db_allocated_storage = 20
 db_name              = "portfolio_db"
 db_username          = "portfolio_admin"
-db_password          = "YOUR_SECURE_PASSWORD_HERE"  # Min 8 characters
+db_password          = "CHANGE_ME_secure_password_min_8_chars"
 
+# =============================================================================
 # GitHub Configuration
+# =============================================================================
+# Create a Personal Access Token at: https://github.com/settings/tokens
+# Required scopes: repo (full control of private repositories)
+
 github_repository   = "caseyrdean/casey-dean-portfolio"
 github_branch       = "main"
-github_access_token = "ghp_YOUR_GITHUB_TOKEN_HERE"
+github_access_token = "CHANGE_ME_ghp_your_github_token"
 
-# Application Secrets
-jwt_secret     = "YOUR_32_CHARACTER_MINIMUM_SECRET_KEY_HERE"
-admin_password = "YOUR_ADMIN_PASSWORD_HERE"  # For admin login
+# =============================================================================
+# Authentication Configuration
+# =============================================================================
+# JWT_SECRET: Used to sign session tokens
+#   Generate with: openssl rand -hex 32
+#
+# ADMIN_PASSWORD: Used for admin login at /admin/login
+#   Can be plain text or bcrypt hash (starting with $2)
+#   To generate bcrypt hash: https://bcrypt-generator.com/
 
-# Owner Information
+jwt_secret     = "CHANGE_ME_generate_with_openssl_rand_hex_32"
+admin_password = "CHANGE_ME_your_admin_password"
+
+# =============================================================================
+# Application Configuration
+# =============================================================================
+
 owner_name = "Casey Dean"
+app_title  = "Casey Dean - AWS Solutions Architect"
 
+# =============================================================================
 # OpenAI Configuration (for The Oracle AI assistant)
-openai_api_key = "sk-YOUR_OPENAI_API_KEY_HERE"
+# =============================================================================
+# Get your API key at: https://platform.openai.com/api-keys
 
-# Custom Domain (optional)
+openai_api_key = "CHANGE_ME_sk_your_openai_api_key"
+
+# =============================================================================
+# Custom Domain (Optional)
+# =============================================================================
+# Leave enable_custom_domain = false to use the default Amplify domain
+# If you have a custom domain, set enable_custom_domain = true and provide the domain
+
 enable_custom_domain = false
 custom_domain        = ""  # e.g., "caseydean.com"
 
+# =============================================================================
 # Tags
+# =============================================================================
+
 tags = {
   Project     = "casey-dean-portfolio"
   ManagedBy   = "terraform"

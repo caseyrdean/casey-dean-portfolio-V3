@@ -141,3 +141,14 @@
 - [x] Test Oracle LLM calls work with direct OpenAI
 - [x] Create AWS_DEPLOYMENT.md for AWS-only deployment
 - [x] Final verification of all functionality (all 45 tests passing)
+
+## AWS Amplify Deployment Preparation
+- [x] Update Terraform main.tf for standalone auth (remove Manus OAuth vars)
+- [x] Update Terraform variables.tf with ADMIN_PASSWORD and validations
+- [x] Update amplify.yml build specification for standalone server
+- [x] Update AWS_DEPLOYMENT.md with complete instructions and architecture diagram
+- [x] Simulate production build (pnpm build) - SUCCESS
+- [x] Verify all environment variables are documented
+- [x] Verify build output structure matches Amplify expectations
+- [x] All 45 tests passing
+- [x] Final deployment readiness verification - READY

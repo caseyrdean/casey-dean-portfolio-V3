@@ -1,17 +1,40 @@
+# =============================================================================
+# AWS Amplify Build Specification
+# =============================================================================
+# This file configures how AWS Amplify builds and deploys the portfolio.
+# 
+# Architecture:
+# - Frontend: React 19 + Vite (static assets)
+# - Backend: Express + tRPC (Node.js server)
+# - Platform: WEB_COMPUTE (enables SSR/server-side code)
+#
+# Build Output:
+# - dist/public/ → Frontend static files
+# - dist/index.js → Backend server bundle
+# =============================================================================
+
 version: 1
 applications:
   - appRoot: /
+    
+    # =========================================================================
+    # Frontend Build (React + Vite)
+    # =========================================================================
     frontend:
       phases:
         preBuild:
           commands:
+            # Enable pnpm via corepack
             - corepack enable
             - corepack prepare pnpm@10.4.1 --activate
+            # Install dependencies
             - pnpm install --frozen-lockfile
         build:
           commands:
+            # Build frontend and backend
             - pnpm run build
       artifacts:
+        # Frontend static files go to dist/public
         baseDirectory: dist/public
         files:
           - '**/*'
@@ -19,18 +42,32 @@ applications:
         paths:
           - node_modules/**/*
           - .pnpm-store/**/*
+    
+    # =========================================================================
+    # Backend Build (Express + tRPC)
+    # =========================================================================
     backend:
       phases:
         preBuild:
           commands:
+            # Enable pnpm via corepack
             - corepack enable
             - corepack prepare pnpm@10.4.1 --activate
+            # Install dependencies
             - pnpm install --frozen-lockfile
         build:
           commands:
+            # Build frontend and backend
             - pnpm run build
+            # Run database migrations
+            - pnpm run db:push
       artifacts:
+        # Backend bundle
         baseDirectory: dist
         files:
           - index.js
           - public/**/*
+      cache:
+        paths:
+          - node_modules/**/*
+          - .pnpm-store/**/*
