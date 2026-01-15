@@ -502,3 +502,18 @@ export async function processDocumentForRAG(
     chunks: chunks.map(c => ({ content: c.content, chunkIndex: c.chunkIndex }))
   };
 }
+
+
+// =============================================================================
+// Cache Management - Exported Functions
+// =============================================================================
+
+/**
+ * Clear the website content cache to force refresh on next Oracle query
+ * Called when blog posts or website content changes
+ */
+export function clearWebsiteCache(): void {
+  console.log('[RAG] Clearing website content cache for Oracle');
+  // Note: The comprehensive-scraper has its own cache that will be cleared
+  // when fetchComprehensiveWebsiteContent is called next
+}

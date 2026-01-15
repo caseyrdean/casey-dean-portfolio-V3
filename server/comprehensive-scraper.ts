@@ -264,3 +264,17 @@ export async function fetchComprehensiveWebsiteContent(): Promise<string | null>
     return null;
   }
 }
+
+
+// =============================================================================
+// Cache Management
+// =============================================================================
+
+/**
+ * Clear the website scrape cache
+ * Called when blog posts or website content changes
+ */
+export function clearWebsiteScraperCache(): void {
+  console.log('[Scraper] Clearing website content cache');
+  fullWebsiteCache = { data: null, timestamp: 0 };
+}
