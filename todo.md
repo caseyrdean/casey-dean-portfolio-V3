@@ -123,3 +123,12 @@
 - [x] Add bobbing up/down animation to match current floating behavior
 - [x] Implement word-sync flashing effect when Oracle speaks
 - [x] Test icon in both collapsed and extended chat window states
+
+## Oracle Orb Redesign v2
+- [x] Create more visually striking orb with layered glow effects
+- [x] Add dynamic inner core with gradient animation
+- [x] Implement reactive pulsing that visibly responds to speech
+- [x] Add particle/energy effects around the orb (outer ring, energy swirl)
+- [x] Ensure consistent animation in both collapsed and expanded states
+- [x] Use React state to sync orb animation with isSpeaking state
+- [x] Make orb larger for better visibility

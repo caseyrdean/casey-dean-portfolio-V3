@@ -286,9 +286,11 @@ export default function TheOracle() {
       >
         <div className="relative">
           {/* Button */}
-          <div className="relative w-16 h-16 bg-background border-2 border-accent rounded-full flex items-center justify-center overflow-hidden group-hover:border-accent transition-colors">
-            {/* Oracle acid green orb */}
-            <div className="oracle-orb" />
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            {/* Oracle acid green orb with container */}
+            <div className={`oracle-orb-container w-20 h-20 ${isSpeaking ? 'speaking' : ''}`}>
+              <div className={`oracle-orb ${isSpeaking ? 'speaking' : ''}`} />
+            </div>
           </div>
           
           {/* Tooltip */}
@@ -314,8 +316,10 @@ export default function TheOracle() {
             
             {/* Header */}
             <div className="relative z-20 flex items-center justify-between p-4 border-b border-primary/50 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full oracle-orb" />
+              <div className="flex items-center gap-4">
+                <div className={`oracle-orb-container w-14 h-14 ${isSpeaking ? 'speaking' : ''}`}>
+                  <div className={`oracle-orb ${isSpeaking ? 'speaking' : ''}`} />
+                </div>
                 <div>
                   <h3 className="font-display text-lg text-foreground tracking-wider">THE ORACLE</h3>
                   <p className="text-xs font-subhead text-primary tracking-widest">SEER OF CASEY DEAN</p>
