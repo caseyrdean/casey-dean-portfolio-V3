@@ -91,3 +91,6 @@
 
 ## Oracle Voice Improvements
 - [x] Remove special characters from spoken text (asterisks, markdown formatting, etc.)
+
+## Oracle Response Optimization
+- [x] Limit Oracle responses to maximum 200 tokens

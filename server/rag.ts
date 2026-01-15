@@ -383,12 +383,13 @@ export async function generateRAGResponse(
     const openai = getOpenAIClient();
     
     // Using gpt-3.5-turbo - best balance of cost and quality
+    // Limited to 200 tokens per response to reduce API costs and improve speed
     // For better responses, consider gpt-4-turbo (paid)
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: messages,
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 200,
     });
     
     const messageContent = response.choices[0]?.message?.content;
