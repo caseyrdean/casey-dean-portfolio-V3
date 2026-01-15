@@ -117,3 +117,9 @@
 - [x] Add route for /admin/projects in App.tsx
 - [x] Test Project Admin CRUD operations
 - [x] Fix Oracle not finding database information (cache issue resolved)
+
+## Oracle Icon Redesign
+- [x] Create acid green orb icon component with pulsing animation
+- [x] Add bobbing up/down animation to match current floating behavior
+- [x] Implement word-sync flashing effect when Oracle speaks
+- [x] Test icon in both collapsed and extended chat window states

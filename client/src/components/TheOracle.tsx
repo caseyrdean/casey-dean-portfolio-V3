@@ -171,11 +171,48 @@ export default function TheOracle() {
     utterance.pitch = 0.5; // Much lower pitch for very deep voice
     utterance.volume = 1.0;
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      triggerOrbFlash();
+    };
+
+    utterance.onboundary = (event) => {
+      // Flash orb at word boundaries
+      if (event.name === 'word') {
+        triggerOrbFlash();
+      }
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      // Remove speaking class when done
+      const orbElement = document.querySelector('.oracle-orb');
+      if (orbElement) {
+        orbElement.classList.remove('speaking');
+      }
+    };
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      const orbElement = document.querySelector('.oracle-orb');
+      if (orbElement) {
+        orbElement.classList.remove('speaking');
+      }
+    };
 
     speechSynthesis.speak(utterance);
+  };
+
+  // Trigger orb flash animation
+  const triggerOrbFlash = () => {
+    const orbElements = document.querySelectorAll('.oracle-orb');
+    orbElements.forEach((orbElement) => {
+      // Remove the speaking class to reset animation
+      orbElement.classList.remove('speaking');
+      // Trigger reflow to restart animation
+      void (orbElement as HTMLElement).offsetWidth;
+      // Add the speaking class to trigger flash
+      orbElement.classList.add('speaking');
+    });
   };
 
   const stopSpeaking = () => {
@@ -248,13 +285,10 @@ export default function TheOracle() {
         aria-label="Open The Oracle Fortune Teller"
       >
         <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-lg opacity-60 group-hover:opacity-100 animate-pulse transition-opacity" />
-          
           {/* Button */}
-          <div className="relative w-16 h-16 bg-background border-2 border-primary rounded-full flex items-center justify-center overflow-hidden group-hover:border-secondary transition-colors">
-            {/* Oracle crystal ball icon */}
-            <div className="text-3xl animate-bounce-slow">🔮</div>
+          <div className="relative w-16 h-16 bg-background border-2 border-accent rounded-full flex items-center justify-center overflow-hidden group-hover:border-accent transition-colors">
+            {/* Oracle acid green orb */}
+            <div className="oracle-orb" />
           </div>
           
           {/* Tooltip */}
@@ -281,7 +315,7 @@ export default function TheOracle() {
             {/* Header */}
             <div className="relative z-20 flex items-center justify-between p-4 border-b border-primary/50 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20">
               <div className="flex items-center gap-3">
-                <div className="text-2xl">🔮</div>
+                <div className="w-8 h-8 rounded-full oracle-orb" />
                 <div>
                   <h3 className="font-display text-lg text-foreground tracking-wider">THE ORACLE</h3>
                   <p className="text-xs font-subhead text-primary tracking-widest">SEER OF CASEY DEAN</p>
