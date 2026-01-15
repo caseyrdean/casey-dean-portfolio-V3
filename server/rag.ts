@@ -14,7 +14,7 @@ import {
   getAllKnowledgeDocuments
 } from "./db";
 import { DocumentChunk } from "../drizzle/schema";
-import { fetchWebsiteContent } from "./website-scraper";
+import { fetchComprehensiveWebsiteContent } from "./comprehensive-scraper";
 
 // Initialize OpenAI client (server-side only, API key from environment)
 // Using GPT-3.5-turbo as it's the most cost-effective model with good performance
@@ -315,11 +315,11 @@ export async function generateRAGResponse(
 }> {
   const startTime = Date.now();
   
-  // Fetch knowledge from both sources in parallel
+  // Fetch knowledge from all sources in parallel
   const [linkedInData, databaseContent, websiteContent] = await Promise.all([
     fetchLinkedInProfile(),
     getFullDocumentContent(),
-    fetchWebsiteContent()
+    fetchComprehensiveWebsiteContent()
   ]);
   
   // Build context - LinkedIn first (primary), then database (equally weighted)

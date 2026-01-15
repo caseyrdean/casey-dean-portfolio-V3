@@ -102,3 +102,11 @@
 - [x] Implement blog post scraping for Oracle
 - [x] Implement project page scraping for Oracle
 - [x] Integrate scraped content into RAG system
+
+## Comprehensive Website Scraping for Oracle
+- [x] Scrape all blog posts with full content
+- [x] Scrape blog attachments (images, documents, videos)
+- [x] Scrape case studies and project pages
+- [x] Scrape all navigable pages (home, projects, credentials, contact)
+- [x] Add PII and secret filtering
+- [x] Integrate full website content into Oracle RAG
