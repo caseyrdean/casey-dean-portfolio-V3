@@ -165,7 +165,7 @@ export const oracleMessages = mysqlTable("oracle_messages", {
   /** The message content */
   content: text("content").notNull(),
   /** IDs of chunks used to generate this response (for oracle messages) */
-  sourceChunkIds: json("sourceChunkIds").$type<number[]>(),
+  sourceChunkIds: text("sourceChunkIds").$type<string>(),
   /** Whether the response was based on knowledge base or "I don't know" */
   hasKnowledge: boolean("hasKnowledge"),
   /** Response generation time in ms */

@@ -234,7 +234,7 @@ export const appRouter = router({
           conversationId,
           role: 'oracle',
           content: result.response,
-          sourceChunkIds: result.sourceChunkIds,
+          sourceChunkIds: JSON.stringify(result.sourceChunkIds || []),
           hasKnowledge: result.hasKnowledge,
           responseTimeMs,
         });

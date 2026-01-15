@@ -66,3 +66,4 @@
 
 ## Bug Fixes
 - [x] Fix TTS API failure for Oracle voice synthesis (switched to Web Speech API)
+- [x] Fix database schema error for sourceChunkIds column type

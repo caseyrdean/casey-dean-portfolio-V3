@@ -1,0 +1,1 @@
+ALTER TABLE `oracle_messages` MODIFY COLUMN `sourceChunkIds` text;

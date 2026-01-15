@@ -29,6 +29,13 @@
       "when": 1768416671474,
       "tag": "0003_previous_photon",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1768419337322,
+      "tag": "0004_outstanding_leader",
+      "breakpoints": true
     }
   ]
 }
