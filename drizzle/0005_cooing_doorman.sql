@@ -1,0 +1,20 @@
+CREATE TABLE `projects` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`slug` varchar(255) NOT NULL,
+	`title` varchar(500) NOT NULL,
+	`subtitle` varchar(500),
+	`category` varchar(100),
+	`image` varchar(1000),
+	`description` text,
+	`challenge` text,
+	`solution` text,
+	`results` json,
+	`technologies` json,
+	`architectureDiagram` varchar(1000),
+	`downloadUrl` varchar(1000),
+	`published` boolean NOT NULL DEFAULT true,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `projects_id` PRIMARY KEY(`id`),
+	CONSTRAINT `projects_slug_unique` UNIQUE(`slug`)
+);

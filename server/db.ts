@@ -1,6 +1,6 @@
 import { eq, desc, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost, BlogPost, blogAttachments, InsertBlogAttachment, BlogAttachment } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, BlogPost, blogAttachments, InsertBlogAttachment, BlogAttachment, projects, InsertProject, Project } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -380,5 +380,80 @@ export async function getPublishedBlogPostsForOracle(): Promise<{ title: string;
     content: post.content,
     category: post.category || undefined,
     tags: post.tags || undefined
+  }));
+}
+
+
+// =============================================================================
+// Projects (Case Studies)
+// =============================================================================
+
+export async function createProject(project: InsertProject): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(projects).values(project);
+  return result[0].insertId;
+}
+
+export async function updateProject(id: number, project: Partial<InsertProject>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(projects).set(project).where(eq(projects.id, id));
+}
+
+export async function deleteProject(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.delete(projects).where(eq(projects.id, id));
+}
+
+export async function getProjectById(id: number): Promise<Project | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  return result[0];
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(projects).where(eq(projects.slug, slug)).limit(1);
+  return result[0];
+}
+
+export async function getAllProjects(includeUnpublished = false): Promise<Project[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  if (includeUnpublished) {
+    return db.select().from(projects).orderBy(desc(projects.createdAt));
+  }
+
+  return db.select().from(projects).where(eq(projects.published, true)).orderBy(desc(projects.createdAt));
+}
+
+export async function getPublishedProjects(): Promise<Project[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db.select().from(projects).where(eq(projects.published, true)).orderBy(desc(projects.createdAt));
+}
+
+export async function getPublishedProjectsForOracle(): Promise<{ title: string; slug: string; description: string; challenge: string; solution: string; results: string[]; technologies: string[]; category?: string }[]> {
+  const publishedProjects = await getPublishedProjects();
+  return publishedProjects.map(project => ({
+    title: project.title,
+    slug: project.slug,
+    description: project.description || '',
+    challenge: project.challenge || '',
+    solution: project.solution || '',
+    results: Array.isArray(project.results) ? project.results : [],
+    technologies: Array.isArray(project.technologies) ? project.technologies : [],
+    category: project.category || undefined
   }));
 }

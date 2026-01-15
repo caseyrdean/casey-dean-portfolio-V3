@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `projects` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `slug` varchar(255) NOT NULL UNIQUE,\n  `title` varchar(500) NOT NULL,\n  `subtitle` varchar(500),\n  `category` varchar(100),\n  `image` varchar(1000),\n  `description` text,\n  `challenge` text,\n  `solution` text,\n  `results` json,\n  `technologies` json,\n  `architectureDiagram` varchar(1000),\n  `downloadUrl` varchar(1000),\n  `published` boolean NOT NULL DEFAULT true,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute CREATE TABLE IF NOT EXISTS `projects` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `slug` varchar(255) NOT NULL UNIQUE,\n  `title` varchar(500) NOT NULL,\n  `subtitle` varchar(500),\n  `category` varchar(100),\n  `image` varchar(1000),\n  `description` text,\n  `challenge` text,\n  `solution` text,\n  `results` json,\n  `technologies` json,\n  `architectureDiagram` varchar(1000),\n  `downloadUrl` varchar(1000),\n  `published` boolean NOT NULL DEFAULT true,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 472
+}

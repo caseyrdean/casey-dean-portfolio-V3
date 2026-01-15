@@ -67,6 +67,31 @@ export const blogAttachments = mysqlTable("blog_attachments", {
 export type BlogAttachment = typeof blogAttachments.$inferSelect;
 export type InsertBlogAttachment = typeof blogAttachments.$inferInsert;
 
+/**
+ * Projects/Case Studies table for the portfolio
+ */
+export const projects = mysqlTable("projects", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  title: varchar("title", { length: 500 }).notNull(),
+  subtitle: varchar("subtitle", { length: 500 }),
+  category: varchar("category", { length: 100 }),
+  image: varchar("image", { length: 1000 }),
+  description: text("description"),
+  challenge: text("challenge"),
+  solution: text("solution"),
+  results: json("results").$type<string[]>(),
+  technologies: json("technologies").$type<string[]>(),
+  architectureDiagram: varchar("architectureDiagram", { length: 1000 }),
+  downloadUrl: varchar("downloadUrl", { length: 1000 }),
+  published: boolean("published").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Project = typeof projects.$inferSelect;
+export type InsertProject = typeof projects.$inferInsert;
+
 
 // =============================================================================
 // The Oracle RAG Knowledge Base Tables

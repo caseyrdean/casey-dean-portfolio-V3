@@ -5,12 +5,14 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { projects } from "@/data/projects";
 import { Link } from "wouter";
 import { Award, BookOpen, ChevronRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { data: projects = [], isLoading } = trpc.project.list.useQuery();
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -101,13 +103,22 @@ export default function Home() {
           
           {/* Project Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
+            {isLoading ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-muted-foreground">Loading projects...</p>
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-muted-foreground">No projects found</p>
+              </div>
+            ) : (
+              projects.map((project, index) => (
               <Link key={project.id} href={`/project/${project.slug}`} className="group block relative overflow-hidden border border-primary/30 bg-card hover:border-primary transition-all duration-500">
                   {/* Project Image */}
                   <div className="relative aspect-video overflow-hidden">
                     <img 
-                      src={project.image} 
-                      alt={project.title}
+                      src={project.image || '/images/placeholder.png'} 
+                      alt={project.title || 'Project'}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
@@ -147,7 +158,8 @@ export default function Home() {
                   {/* Neon accent line */}
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </Link>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </section>

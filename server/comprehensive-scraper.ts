@@ -4,7 +4,7 @@
  * Filters out PII and secrets
  */
 
-import { getPublishedBlogPostsForOracle } from './db';
+import { getPublishedBlogPostsForOracle, getPublishedProjectsForOracle } from './db';
 
 // Cache for full website data (refresh every hour)
 let fullWebsiteCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
@@ -39,20 +39,18 @@ function filterSensitiveInfo(text: string): string {
 }
 
 /**
- * Get all projects from the frontend data
+ * Get all projects from the database
  */
 async function getProjectsContent(): Promise<string> {
   try {
-    // Import projects from frontend data
-    const { projects } = await import('../client/src/data/projects');
+    const projects = await getPublishedProjectsForOracle();
     
     let projectsContent = 'PROJECTS AND CASE STUDIES:\n';
     projectsContent += '='.repeat(70) + '\n\n';
     
     for (const project of projects) {
       projectsContent += `PROJECT: ${project.title}\n`;
-      projectsContent += `Category: ${project.category}\n`;
-      projectsContent += `Subtitle: ${project.subtitle}\n\n`;
+      projectsContent += `Category: ${project.category || 'N/A'}\n\n`;
       
       projectsContent += `DESCRIPTION:\n${project.description}\n\n`;
       
@@ -71,10 +69,6 @@ async function getProjectsContent(): Promise<string> {
         projectsContent += `- ${tech}\n`;
       }
       projectsContent += '\n';
-      
-      if (project.downloadUrl) {
-        projectsContent += `Download: ${project.downloadUrl}\n`;
-      }
       
       projectsContent += '-'.repeat(70) + '\n\n';
     }

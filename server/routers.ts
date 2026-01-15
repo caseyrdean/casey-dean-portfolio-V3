@@ -15,6 +15,14 @@ import {
   deleteBlogAttachment,
   getAttachmentsByPostId,
   getAttachmentById,
+  // Project imports
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectById,
+  getProjectBySlug,
+  getAllProjects,
+  getPublishedProjects,
   // Oracle RAG imports
   createKnowledgeDocument,
   updateKnowledgeDocument,
@@ -187,6 +195,81 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await deleteBlogAttachment(input.id);
+        return { success: true };
+      }),
+  }),
+
+  project: router({
+    // Public: Get all published projects
+    list: publicProcedure.query(async () => {
+      return getPublishedProjects();
+    }),
+
+    // Public: Get a specific project by slug
+    bySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return getProjectBySlug(input.slug);
+      }),
+
+    // Public: Get a specific project by ID
+    byId: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return getProjectById(input.id);
+      }),
+
+    // Admin: Create a new project
+    create: adminProcedure
+      .input(z.object({
+        slug: z.string(),
+        title: z.string(),
+        subtitle: z.string().optional(),
+        category: z.string().optional(),
+        image: z.string().optional(),
+        description: z.string().optional(),
+        challenge: z.string().optional(),
+        solution: z.string().optional(),
+        results: z.array(z.string()).optional(),
+        technologies: z.array(z.string()).optional(),
+        architectureDiagram: z.string().optional(),
+        downloadUrl: z.string().optional(),
+        published: z.boolean().default(true),
+      }))
+      .mutation(async ({ input }) => {
+        const projectId = await createProject(input);
+        return { id: projectId };
+      }),
+
+    // Admin: Update a project
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        slug: z.string().optional(),
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        category: z.string().optional(),
+        image: z.string().optional(),
+        description: z.string().optional(),
+        challenge: z.string().optional(),
+        solution: z.string().optional(),
+        results: z.array(z.string()).optional(),
+        technologies: z.array(z.string()).optional(),
+        architectureDiagram: z.string().optional(),
+        downloadUrl: z.string().optional(),
+        published: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...updateData } = input;
+        await updateProject(id, updateData);
+        return { success: true };
+      }),
+
+    // Admin: Delete a project
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteProject(input.id);
         return { success: true };
       }),
   }),
