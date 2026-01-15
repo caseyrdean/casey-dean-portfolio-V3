@@ -11,6 +11,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BlogAdmin from "./pages/BlogAdmin";
 import KnowledgeAdmin from "./pages/KnowledgeAdmin";
+import ProjectAdmin from "./pages/ProjectAdmin";
 import TheOracle from "./components/TheOracle";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/admin/blog"} component={BlogAdmin} />
       <Route path={"/admin/knowledge"} component={KnowledgeAdmin} />
+      <Route path={"/admin/projects"} component={ProjectAdmin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

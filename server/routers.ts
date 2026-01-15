@@ -205,6 +205,11 @@ export const appRouter = router({
       return getPublishedProjects();
     }),
 
+    // Admin: Get all projects (including unpublished)
+    adminList: adminProcedure.query(async () => {
+      return getAllProjects(true);
+    }),
+
     // Public: Get a specific project by slug
     bySlug: publicProcedure
       .input(z.object({ slug: z.string() }))

@@ -26,7 +26,8 @@ import {
   Video,
   ArrowLeft,
   Loader2,
-  MessageCircle
+  MessageCircle,
+  FolderOpen
 } from "lucide-react";
 
 function slugify(text: string): string {
@@ -263,6 +264,14 @@ export default function BlogAdmin() {
             <p className="text-muted-foreground font-body mt-2">Manage your blog posts and uploads</p>
           </div>
           <div className="flex items-center gap-4">
+            <Button 
+              onClick={() => setLocation("/admin/projects")}
+              variant="outline"
+              className="font-subhead tracking-wider border-accent text-accent hover:bg-accent/10"
+            >
+              <FolderOpen className="w-4 h-4 mr-2" />
+              PROJECTS
+            </Button>
             <Button 
               onClick={() => setLocation("/admin/knowledge")}
               variant="outline"

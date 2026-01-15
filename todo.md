@@ -110,3 +110,10 @@
 - [x] Scrape all navigable pages (home, projects, credentials, contact)
 - [x] Add PII and secret filtering
 - [x] Integrate full website content into Oracle RAG
+
+## Project Admin Page
+- [x] Create Project Admin page mirroring Blog Admin functionality
+- [x] Add "Projects" navigation button to Blog Admin page (like Oracle Knowledge button)
+- [x] Add route for /admin/projects in App.tsx
+- [x] Test Project Admin CRUD operations
+- [x] Fix Oracle not finding database information (cache issue resolved)
