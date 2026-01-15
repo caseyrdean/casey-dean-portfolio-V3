@@ -128,3 +128,16 @@
 - [x] Verify all database connections work
 - [x] Verify Oracle functionality works
 - [x] Final checkpoint for deployment
+
+## Full AWS Independence Refactoring
+- [x] Audit all Manus-specific dependencies in codebase
+- [x] Replace Manus OAuth with simple password-based admin auth
+- [x] Replace Manus LLM wrapper (invokeLLM) with direct OpenAI SDK (already using direct SDK)
+- [x] Remove Manus-specific environment variables
+- [x] Create standalone server/auth.ts, server/context.ts, server/trpc.ts
+- [x] Update storage.ts to use AWS S3 SDK directly
+- [x] Update Terraform for standalone auth (ADMIN_PASSWORD)
+- [x] Test authentication flow works without Manus
+- [x] Test Oracle LLM calls work with direct OpenAI
+- [x] Create AWS_DEPLOYMENT.md for AWS-only deployment
+- [x] Final verification of all functionality (all 45 tests passing)

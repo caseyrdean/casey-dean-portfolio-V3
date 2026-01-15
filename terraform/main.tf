@@ -73,16 +73,13 @@ locals {
   s3_bucket_name = "${var.project_name}-uploads-${random_id.suffix.hex}"
   
   # Amplify environment variables
+  # Environment variables for AWS deployment (no Manus dependencies)
   amplify_env_vars = {
     NODE_ENV                    = "production"
     DATABASE_URL                = local.database_url
     JWT_SECRET                  = var.jwt_secret
+    ADMIN_PASSWORD              = var.admin_password
     OWNER_NAME                  = var.owner_name
-    OWNER_OPEN_ID               = var.owner_open_id
-    OWNER_EMAIL                 = var.owner_email
-    OAUTH_SERVER_URL            = var.oauth_server_url
-    VITE_OAUTH_PORTAL_URL       = var.oauth_portal_url
-    VITE_APP_ID                 = var.app_id
     AWS_S3_BUCKET               = local.s3_bucket_name
     AWS_S3_REGION               = var.aws_region
     VITE_APP_TITLE              = "Casey Dean - AWS Solutions Architect"

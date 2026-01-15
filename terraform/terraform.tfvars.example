@@ -3,6 +3,8 @@
 # =============================================================================
 # Copy this file to terraform.tfvars and fill in your values.
 # NEVER commit terraform.tfvars to version control!
+#
+# NOTE: This configuration is fully AWS-independent with no Manus dependencies.
 # =============================================================================
 
 # AWS Configuration
@@ -23,20 +25,14 @@ github_branch       = "main"
 github_access_token = "ghp_YOUR_GITHUB_TOKEN_HERE"
 
 # Application Secrets
-jwt_secret = "YOUR_32_CHARACTER_MINIMUM_SECRET_KEY_HERE"
+jwt_secret     = "YOUR_32_CHARACTER_MINIMUM_SECRET_KEY_HERE"
+admin_password = "YOUR_ADMIN_PASSWORD_HERE"  # For admin login
 
 # Owner Information
-owner_email   = "casey.r.dean1990@gmail.com"
-owner_name    = "Casey Dean"
-owner_open_id = ""  # Your OpenID for authentication
+owner_name = "Casey Dean"
 
 # OpenAI Configuration (for The Oracle AI assistant)
 openai_api_key = "sk-YOUR_OPENAI_API_KEY_HERE"
-
-# OAuth Configuration (Manus - leave empty if not using)
-oauth_server_url = ""
-oauth_portal_url = ""
-app_id           = ""
 
 # Custom Domain (optional)
 enable_custom_domain = false

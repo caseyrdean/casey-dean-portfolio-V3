@@ -1,8 +1,22 @@
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
+/**
+ * tRPC Routers - Standalone Version
+ * 
+ * All API routes for the portfolio website.
+ * No Manus dependencies - fully portable to AWS.
+ */
+
 import { z } from "zod";
+import { 
+  publicProcedure, 
+  protectedProcedure, 
+  adminProcedure, 
+  router 
+} from "./trpc";
+import { 
+  AUTH_COOKIE_NAME, 
+  getSessionCookieOptions, 
+  loginWithPassword 
+} from "./auth";
 import { 
   createBlogPost, 
   updateBlogPost, 
@@ -40,18 +54,40 @@ import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 
 export const appRouter = router({
-  system: systemRouter,
+  // System routes (health check only)
+  system: router({
+    health: publicProcedure
+      .input(z.object({ timestamp: z.number().min(0) }))
+      .query(() => ({ ok: true })),
+  }),
+
+  // Authentication routes
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    
+    login: publicProcedure
+      .input(z.object({ password: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await loginWithPassword(input.password);
+        
+        if (!result) {
+          return { success: false, error: "Invalid password" };
+        }
+        
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(AUTH_COOKIE_NAME, result.token, cookieOptions);
+        
+        return { success: true, user: result.user };
+      }),
+    
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+      ctx.res.clearCookie(AUTH_COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+      return { success: true };
     }),
   }),
 
+  // Blog routes
   blog: router({
     // Public: Get all published posts
     list: publicProcedure.query(async () => {
@@ -199,6 +235,7 @@ export const appRouter = router({
       }),
   }),
 
+  // Project routes
   project: router({
     // Public: Get all published projects
     list: publicProcedure.query(async () => {

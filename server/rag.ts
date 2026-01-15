@@ -6,7 +6,7 @@
 // =============================================================================
 
 import OpenAI from 'openai';
-import { ENV } from './_core/env';
+// Environment variables accessed directly from process.env
 import { 
   getAllActiveChunks, 
   getChunksByIds,
@@ -19,11 +19,12 @@ import { fetchComprehensiveWebsiteContent } from "./comprehensive-scraper";
 // Initialize OpenAI client (server-side only, API key from environment)
 // Using GPT-3.5-turbo as it's the most cost-effective model with good performance
 const getOpenAIClient = () => {
-  if (!ENV.openaiApiKey) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
     throw new Error('OPENAI_API_KEY environment variable is not set');
   }
   return new OpenAI({
-    apiKey: ENV.openaiApiKey,
+    apiKey,
     baseURL: 'https://api.openai.com/v1',
   });
 };

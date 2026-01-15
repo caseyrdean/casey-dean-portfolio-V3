@@ -3,6 +3,8 @@
 # =============================================================================
 # This file defines all configurable variables for the AWS infrastructure.
 # Update these values before running terraform apply.
+# 
+# NOTE: This configuration is fully AWS-independent with no Manus dependencies.
 # =============================================================================
 
 variable "aws_region" {
@@ -86,10 +88,10 @@ variable "jwt_secret" {
   sensitive   = true
 }
 
-variable "owner_email" {
-  description = "Owner email address"
+variable "admin_password" {
+  description = "Admin password for login (can be plain text or bcrypt hash)"
   type        = string
-  default     = "casey.r.dean1990@gmail.com"
+  sensitive   = true
 }
 
 variable "owner_name" {
@@ -98,38 +100,10 @@ variable "owner_name" {
   default     = "Casey Dean"
 }
 
-variable "owner_open_id" {
-  description = "Owner OpenID for authentication"
-  type        = string
-  default     = ""
-}
-
 variable "openai_api_key" {
   description = "OpenAI API key for The Oracle AI assistant"
   type        = string
   sensitive   = true
-}
-
-# =============================================================================
-# OAuth Configuration (Manus)
-# =============================================================================
-
-variable "oauth_server_url" {
-  description = "Manus OAuth server URL"
-  type        = string
-  default     = ""
-}
-
-variable "oauth_portal_url" {
-  description = "Manus OAuth portal URL for frontend"
-  type        = string
-  default     = ""
-}
-
-variable "app_id" {
-  description = "Manus application ID"
-  type        = string
-  default     = ""
 }
 
 # =============================================================================

@@ -13,6 +13,7 @@ import BlogAdmin from "./pages/BlogAdmin";
 import KnowledgeAdmin from "./pages/KnowledgeAdmin";
 import ProjectAdmin from "./pages/ProjectAdmin";
 import TheOracle from "./components/TheOracle";
+import AdminLogin from "./pages/admin/Login";
 
 /* Design Philosophy: Neon Apocalypse - Cyberpunk Metal Fusion
  * Dark theme with electric cyan, magenta, and toxic green neon accents
@@ -26,6 +27,7 @@ function Router() {
       <Route path={"/project/:slug"} component={ProjectDetail} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
+      <Route path={"/admin/login"} component={AdminLogin} />
       <Route path={"/admin/blog"} component={BlogAdmin} />
       <Route path={"/admin/knowledge"} component={KnowledgeAdmin} />
       <Route path={"/admin/projects"} component={ProjectAdmin} />
