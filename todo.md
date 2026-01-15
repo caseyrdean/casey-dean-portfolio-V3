@@ -94,3 +94,6 @@
 
 ## Oracle Response Optimization
 - [x] Limit Oracle responses to maximum 200 tokens
+
+## Oracle Knowledge Sources
+- [x] Add website content as reference source with equal weight to LinkedIn

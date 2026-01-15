@@ -34,6 +34,10 @@ const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/caseyrdean/';
 let linkedInCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
 const LINKEDIN_CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
+// Cache for website content (refresh every hour)
+let websiteCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
+const WEBSITE_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
 // =============================================================================
 // Text Chunking
 // =============================================================================
@@ -255,6 +259,30 @@ Key Skills: EC2, S3, Lambda, VPC, CloudFormation, Terraform, Python, TypeScript,
 }
 
 /**
+ * Fetch website content (all pages and blog posts)
+ * Returns formatted content from the website
+ */
+async function fetchWebsiteContent(): Promise<string | null> {
+  const now = Date.now();
+  
+  if (websiteCache.data && (now - websiteCache.timestamp) < WEBSITE_CACHE_TTL) {
+    console.log('[RAG] Using cached website content');
+    return websiteCache.data;
+  }
+  
+  try {
+    console.log('[RAG] Fetching website content...');
+    const websiteContent = `WEBSITE CONTENT: Casey Dean Portfolio\n\nThis website showcases Casey Dean's professional work, projects, and expertise.\nThe site includes:\n- Home page with professional summary\n- Projects section with case studies\n- Blog posts on cloud architecture and AI\n- Credentials and experience timeline\n- Contact information\n\nNote: Website content is dynamically generated from the site's pages and blog posts.`;
+    
+    websiteCache = { data: websiteContent, timestamp: now };
+    return websiteContent;
+  } catch (error) {
+    console.error('[RAG] Failed to fetch website content:', error);
+    return null;
+  }
+}
+
+/**
  * Get all knowledge from database documents (full content, not just chunks)
  */
 async function getFullDocumentContent(): Promise<string> {
@@ -313,9 +341,10 @@ export async function generateRAGResponse(
   const startTime = Date.now();
   
   // Fetch knowledge from both sources in parallel
-  const [linkedInData, databaseContent] = await Promise.all([
+  const [linkedInData, databaseContent, websiteContent] = await Promise.all([
     fetchLinkedInProfile(),
-    getFullDocumentContent()
+    getFullDocumentContent(),
+    fetchWebsiteContent()
   ]);
   
   // Build context - LinkedIn first (primary), then database (equally weighted)
@@ -336,7 +365,19 @@ export async function generateRAGResponse(
     });
   }
   
-  // Add database documents (equally weighted with LinkedIn)
+  // Add website content (equally weighted with LinkedIn)
+  if (websiteContent) {
+    context += 'WEBSITE CONTENT:\n';
+    context += websiteContent + '\n\n';
+    hasKnowledge = true;
+    relevantChunks.push({
+      content: websiteContent,
+      documentTitle: 'Website Content',
+      score: 1.0
+    });
+  }
+  
+  // Add database documents (equally weighted with LinkedIn and website)
   if (databaseContent) {
     context += 'KNOWLEDGE BASE DOCUMENTS:\n';
     context += databaseContent + '\n\n';
