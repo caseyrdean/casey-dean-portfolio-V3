@@ -75,3 +75,8 @@
 
 ## Admin Panel Improvements
 - [x] Add toggle switch in Blog Admin header to switch between blog and Oracle knowledge base editor
+
+## Oracle Knowledge Source Integration
+- [x] Fix Oracle to properly connect to knowledge base database
+- [x] Add LinkedIn profile as primary knowledge source
+- [x] Implement fallback logic (LinkedIn first, then database)

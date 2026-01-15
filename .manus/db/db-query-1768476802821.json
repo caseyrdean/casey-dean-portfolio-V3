@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, documentId, chunkIndex, SUBSTRING(content, 1, 200) as content_preview FROM document_chunks;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SELECT id, documentId, chunkIndex, SUBSTRING(content, 1, 200) as content_preview FROM document_chunks;",
+  "rows": [
+    {
+      "id": "1",
+      "documentId": "1",
+      "chunkIndex": "0",
+      "content_preview": "# Casey Dean Jersey City, NJ 07302 | 661.577.7042 | casey.r.dean1990@gmail.com | linkedin.com/in/caseyrdean ## Overview Growth and learning focused military veteran with passion for AWS cloud architec"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdocumentId\tchunkIndex\tcontent_preview\n1\t1\t0\t# Casey Dean Jersey City, NJ 07302 | 661.577.7042 | casey.r.dean1990@gmail.com | linkedin.com/in/caseyrdean ## Overview Growth and learning focused military veteran with passion for AWS cloud architec\n",
+  "stderr": "",
+  "execution_time_ms": 48
+}

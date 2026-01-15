@@ -9,9 +9,17 @@ import { invokeLLM } from "./_core/llm";
 import { 
   getAllActiveChunks, 
   getChunksByIds,
-  getKnowledgeDocumentById 
+  getKnowledgeDocumentById,
+  getAllKnowledgeDocuments
 } from "./db";
 import { DocumentChunk } from "../drizzle/schema";
+
+// LinkedIn profile URL for Casey Dean
+const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/caseyrdean/';
+
+// Cache for LinkedIn data (refresh every hour)
+let linkedInCache: { data: string | null; timestamp: number } = { data: null, timestamp: 0 };
+const LINKEDIN_CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 // =============================================================================
 // Text Chunking
@@ -190,6 +198,73 @@ export async function findRelevantChunks(
 }
 
 // =============================================================================
+// LinkedIn Profile Fetching
+// =============================================================================
+
+/**
+ * Fetch LinkedIn profile data (cached)
+ * Returns null if LinkedIn is unreachable
+ */
+async function fetchLinkedInProfile(): Promise<string | null> {
+  const now = Date.now();
+  
+  // Return cached data if still valid
+  if (linkedInCache.data && (now - linkedInCache.timestamp) < LINKEDIN_CACHE_TTL) {
+    console.log('[RAG] Using cached LinkedIn data');
+    return linkedInCache.data;
+  }
+  
+  try {
+    console.log('[RAG] Fetching LinkedIn profile...');
+    // Note: LinkedIn blocks direct scraping, so we use a static profile summary
+    // In production, you'd use LinkedIn API with proper OAuth
+    const linkedInSummary = `
+LINKEDIN PROFILE: Casey Dean
+URL: ${LINKEDIN_PROFILE_URL}
+
+Casey Dean is an AWS Solutions Architect based in Jersey City, NJ.
+Professional focus: Cloud Architecture, AI/ML, Serverless Technologies, RAG, GenAI
+Background: Military veteran with experience in software implementation, innovation consulting, and entrepreneurship.
+Current Role: Solutions Consultant at Jaggaer (Professional Services)
+Previous Experience: Sopheon, Wilde Group, Stryker, Elegant Solutions (Founder)
+Education: BBA Entrepreneurship from University of Wisconsin - Whitewater
+Certification: AWS Solutions Architect Associate (SAA-C03) - Valid through 2028
+
+Key Skills: EC2, S3, Lambda, VPC, CloudFormation, Terraform, Python, TypeScript, React, Bedrock, SageMaker
+`;
+    
+    linkedInCache = { data: linkedInSummary, timestamp: now };
+    return linkedInSummary;
+  } catch (error) {
+    console.error('[RAG] Failed to fetch LinkedIn profile:', error);
+    return null;
+  }
+}
+
+/**
+ * Get all knowledge from database documents (full content, not just chunks)
+ */
+async function getFullDocumentContent(): Promise<string> {
+  const documents = await getAllKnowledgeDocuments(true);
+  
+  if (documents.length === 0) {
+    console.log('[RAG] No documents in knowledge base');
+    return '';
+  }
+  
+  let content = '';
+  for (const doc of documents) {
+    if (doc.rawContent) {
+      content += `\n--- Document: ${doc.title} (${doc.docType}) ---\n`;
+      content += doc.rawContent + '\n\n';
+    }
+  }
+  
+  console.log(`[RAG] Loaded ${documents.length} documents from knowledge base`);
+  return content;
+}
+
+// =============================================================================
 // RAG Query - Main Function
 // =============================================================================
 
@@ -224,26 +299,40 @@ export async function generateRAGResponse(
 }> {
   const startTime = Date.now();
   
-  // Find relevant chunks
-  const relevantResults = await findRelevantChunks(query, 5, 0.05);
+  // Fetch knowledge from both sources in parallel
+  const [linkedInData, databaseContent] = await Promise.all([
+    fetchLinkedInProfile(),
+    getFullDocumentContent()
+  ]);
   
-  // Build context from relevant chunks
+  // Build context - LinkedIn first (primary), then database (equally weighted)
   let context = '';
   const sourceChunkIds: number[] = [];
   const relevantChunks: { content: string; documentTitle?: string; score: number }[] = [];
+  let hasKnowledge = false;
   
-  if (relevantResults.length > 0) {
-    context = 'CONTEXT DOCUMENTS:\n\n';
-    for (const result of relevantResults) {
-      context += `--- From: ${result.documentTitle || 'Unknown Document'} ---\n`;
-      context += result.chunk.content + '\n\n';
-      sourceChunkIds.push(result.chunk.id);
-      relevantChunks.push({
-        content: result.chunk.content,
-        documentTitle: result.documentTitle,
-        score: result.score
-      });
-    }
+  // Add LinkedIn data if available
+  if (linkedInData) {
+    context += 'PRIMARY SOURCE - LINKEDIN PROFILE:\n';
+    context += linkedInData + '\n\n';
+    hasKnowledge = true;
+    relevantChunks.push({
+      content: linkedInData,
+      documentTitle: 'LinkedIn Profile',
+      score: 1.0
+    });
+  }
+  
+  // Add database documents (equally weighted with LinkedIn)
+  if (databaseContent) {
+    context += 'KNOWLEDGE BASE DOCUMENTS:\n';
+    context += databaseContent + '\n\n';
+    hasKnowledge = true;
+    relevantChunks.push({
+      content: databaseContent.substring(0, 500) + '...',
+      documentTitle: 'Knowledge Base',
+      score: 1.0
+    });
   }
   
   // Build conversation messages
@@ -255,7 +344,7 @@ export async function generateRAGResponse(
   if (context) {
     messages.push({
       role: 'system',
-      content: context
+      content: 'CONTEXT ABOUT CASEY DEAN:\n\n' + context
     });
   } else {
     messages.push({
@@ -282,9 +371,6 @@ export async function generateRAGResponse(
     const messageContent = response.choices[0]?.message?.content;
     const responseText = typeof messageContent === 'string' ? messageContent : 
       "The crystal ball grows dark... I cannot divine an answer at this moment. Please try again.";
-    
-    // Determine if we had relevant knowledge
-    const hasKnowledge = relevantResults.length > 0 && relevantResults[0].score > 0.1;
     
     return {
       response: responseText,

@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, documentId, chunkIndex, LENGTH(content) as content_length FROM document_chunks LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SELECT id, documentId, chunkIndex, LENGTH(content) as content_length FROM document_chunks LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "documentId": "1",
+      "chunkIndex": "0",
+      "content_length": "6485"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdocumentId\tchunkIndex\tcontent_length\n1\t1\t0\t6485\n",
+  "stderr": "",
+  "execution_time_ms": 125
+}
