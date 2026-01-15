@@ -1,0 +1,18 @@
+{
+  "query": "SHOW COLUMNS FROM oracle_messages WHERE Field = 'content';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SHOW COLUMNS FROM oracle_messages WHERE Field = 'content';",
+  "rows": [
+    {
+      "Field": "content",
+      "Type": "text",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\ncontent\ttext\tNO\t\tNULL\t\n",
+  "stderr": "",
+  "execution_time_ms": 68
+}
