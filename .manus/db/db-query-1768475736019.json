@@ -1,0 +1,25 @@
+{
+  "query": "SHOW CREATE TABLE oracle_messages;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SHOW CREATE TABLE oracle_messages;",
+  "rows": [
+    {
+      "Table": "oracle_messages",
+      "Create Table": "CREATE TABLE `oracle_messages` ("
+    }
+  ],
+  "messages": [
+    "  `id` int(11) NOT NULL AUTO_INCREMENT,",
+    "  `conversationId` int(11) NOT NULL,",
+    "  `role` enum('user','zoltar') NOT NULL,",
+    "  `content` longtext NOT NULL,",
+    "  `sourceChunkIds` text DEFAULT NULL,",
+    "  `hasKnowledge` tinyint(1) DEFAULT NULL,",
+    "  `responseTimeMs` int(11) DEFAULT NULL,",
+    "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */",
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=90001"
+  ],
+  "stdout": "Table\tCreate Table\noracle_messages\tCREATE TABLE `oracle_messages` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `conversationId` int(11) NOT NULL,\n  `role` enum('user','zoltar') NOT NULL,\n  `content` longtext NOT NULL,\n  `sourceChunkIds` text DEFAULT NULL,\n  `hasKnowledge` tinyint(1) DEFAULT NULL,\n  `responseTimeMs` int(11) DEFAULT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=90001\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

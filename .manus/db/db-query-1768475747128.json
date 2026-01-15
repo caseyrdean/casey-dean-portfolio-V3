@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE oracle_messages SET role = 'user' WHERE role = 'zoltar';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute UPDATE oracle_messages SET role = 'user' WHERE role = 'zoltar';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 61
+}

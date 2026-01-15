@@ -68,3 +68,4 @@
 - [x] Fix TTS API failure for Oracle voice synthesis (switched to Web Speech API)
 - [x] Fix database schema error for sourceChunkIds column type
 - [x] Fix database content column size for long messages (changed to LONGTEXT)
+- [x] Fix role enum missing 'oracle' value (was still 'zoltar' in database)
