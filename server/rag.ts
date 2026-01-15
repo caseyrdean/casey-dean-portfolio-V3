@@ -5,7 +5,8 @@
 // semantic search for The Oracle fortune teller feature.
 // =============================================================================
 
-import { invokeLLM } from "./_core/llm";
+import OpenAI from 'openai';
+import { ENV } from './_core/env';
 import { 
   getAllActiveChunks, 
   getChunksByIds,
@@ -13,6 +14,17 @@ import {
   getAllKnowledgeDocuments
 } from "./db";
 import { DocumentChunk } from "../drizzle/schema";
+
+// Initialize OpenAI client (server-side only, API key from environment)
+// Using GPT-3.5-turbo as it's the most cost-effective model with good performance
+const getOpenAIClient = () => {
+  if (!ENV.openaiApiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is not set');
+  }
+  return new OpenAI({
+    apiKey: ENV.openaiApiKey,
+  });
+};
 
 // LinkedIn profile URL for Casey Dean
 const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/caseyrdean/';
@@ -365,12 +377,24 @@ export async function generateRAGResponse(
   // Add current query
   messages.push({ role: 'user', content: query });
   
-  // Generate response
+  // Generate response using OpenAI
   try {
-    const response = await invokeLLM({ messages });
+    const openai = getOpenAIClient();
+    
+    // Using gpt-3.5-turbo - best balance of cost and quality
+    // For better responses, consider gpt-4-turbo (paid)
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: messages,
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+    
     const messageContent = response.choices[0]?.message?.content;
     const responseText = typeof messageContent === 'string' ? messageContent : 
       "The crystal ball grows dark... I cannot divine an answer at this moment. Please try again.";
+    
+    console.log(`[RAG] OpenAI response generated (${response.usage?.total_tokens || 0} tokens used)`);
     
     return {
       response: responseText,
@@ -378,8 +402,19 @@ export async function generateRAGResponse(
       hasKnowledge,
       relevantChunks
     };
-  } catch (error) {
-    console.error('[RAG] Error generating response:', error);
+  } catch (error: any) {
+    console.error('[RAG] Error generating response:', error?.message || error);
+    
+    // Provide more specific error messages
+    if (error?.code === 'invalid_api_key') {
+      return {
+        response: "The Oracle's connection to the ethereal realm is not configured. Please contact the site administrator.",
+        sourceChunkIds: [],
+        hasKnowledge: false,
+        relevantChunks: []
+      };
+    }
+    
     return {
       response: "The mystical energies are disturbed... I cannot provide a reading at this moment. Please try again later.",
       sourceChunkIds: [],

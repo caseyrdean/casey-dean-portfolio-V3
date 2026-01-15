@@ -7,4 +7,6 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  // OpenAI API key for The Oracle (server-side only, never exposed to client)
+  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
 };

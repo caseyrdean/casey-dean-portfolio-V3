@@ -80,3 +80,10 @@
 - [x] Fix Oracle to properly connect to knowledge base database
 - [x] Add LinkedIn profile as primary knowledge source
 - [x] Implement fallback logic (LinkedIn first, then database)
+
+## OpenAI Integration
+- [x] Install OpenAI SDK
+- [x] Add OPENAI_API_KEY to environment variables (server-side only)
+- [x] Update RAG to use OpenAI API instead of Manus LLM
+- [x] Ensure no hardcoded keys or PII
+- [ ] Configure API key and test with OpenAI
