@@ -86,4 +86,5 @@
 - [x] Add OPENAI_API_KEY to environment variables (server-side only)
 - [x] Update RAG to use OpenAI API instead of Manus LLM
 - [x] Ensure no hardcoded keys or PII
-- [ ] Configure API key and test with OpenAI
+- [x] Configure API key and test with OpenAI
+- [x] Fix SDK baseURL issue for service account tokens

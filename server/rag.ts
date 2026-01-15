@@ -23,6 +23,7 @@ const getOpenAIClient = () => {
   }
   return new OpenAI({
     apiKey: ENV.openaiApiKey,
+    baseURL: 'https://api.openai.com/v1',
   });
 };
 
