@@ -137,8 +137,14 @@ export default function TheOracle() {
 
   // Transform text to be more mystical
   const transformToMystical = (text: string): string => {
-    // Remove special characters and markdown formatting for clean speech
-    // Keep the text natural without dramatic pauses or emphasis
+    // For speech synthesis, skip special characters but keep the content
+    // This is done by the Web Speech API's utterance processing
+    // The text content remains unchanged for display
+    return text;
+  };
+
+  // Clean text for speech synthesis - removes special characters but preserves words
+  const cleanTextForSpeech = (text: string): string => {
     return text
       .replace(/[*_`~#\[\]()>|\-]/g, '') // Remove markdown and special characters
       .replace(/\s+/g, ' ') // Collapse multiple spaces
@@ -151,8 +157,9 @@ export default function TheOracle() {
     // Cancel any ongoing speech
     speechSynthesis.cancel();
 
-    // Transform text to mystical version
-    const mysticalText = transformToMystical(text);
+    // Clean text for speech - remove special characters but keep content
+    const cleanText = cleanTextForSpeech(text);
+    const mysticalText = transformToMystical(cleanText);
 
     const utterance = new SpeechSynthesisUtterance(mysticalText);
     
