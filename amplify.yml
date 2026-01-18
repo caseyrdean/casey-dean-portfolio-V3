@@ -15,7 +15,7 @@
 
 version: 1
 applications:
-  - appRoot: /
+  - appRoot: .
     
     # =========================================================================
     # Frontend Build (React + Vite)
