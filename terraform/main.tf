@@ -68,14 +68,14 @@ resource "random_id" "suffix" {
 
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
-  
+
   # Database connection string for the application
   # Format: mysql://user:password@host:port/database?ssl=true
-  database_url = "mysql://${var.db_username}:${var.db_password}@${aws_db_instance.main.endpoint}/${var.db_name}?ssl=true"
-  
+  database_url = "mysql://${var.db_username}:${var.db_password}@${aws_db_instance.main.endpoint}/${var.db_name}"
+
   # S3 bucket name (must be globally unique)
   s3_bucket_name = "${var.project_name}-uploads-${random_id.suffix.hex}"
-  
+
   # ==========================================================================
   # Amplify Environment Variables
   # ==========================================================================
@@ -85,26 +85,26 @@ locals {
   amplify_env_vars = {
     # Application mode
     NODE_ENV = "production"
-    
+
     # Database connection (MySQL/Aurora)
     DATABASE_URL = local.database_url
-    
+
     # Authentication - Simple password-based admin login
     # The JWT_SECRET is used to sign session tokens
     # The ADMIN_PASSWORD is used for admin login at /admin/login
     JWT_SECRET     = var.jwt_secret
     ADMIN_PASSWORD = var.admin_password
-    
+
     # Owner information (displayed in UI)
     OWNER_NAME = var.owner_name
-    
+
     # S3 configuration for file uploads (AWS_ prefix not allowed in Amplify)
     S3_BUCKET_NAME = local.s3_bucket_name
     S3_REGION      = var.aws_region
-    
+
     # Application title (used in browser tab, meta tags)
     VITE_APP_TITLE = var.app_title
-    
+
     # OpenAI API key for The Oracle AI assistant
     # This is the ONLY external API dependency
     OPENAI_API_KEY = var.openai_api_key

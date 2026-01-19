@@ -7,8 +7,8 @@
 output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
-    application_url    = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.main.default_domain}"
-    database_endpoint  = aws_db_instance.main.endpoint
+    application_url   = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.main.default_domain}"
+    database_endpoint = aws_db_instance.main.endpoint
     s3_bucket         = aws_s3_bucket.uploads.id
     region            = var.aws_region
   }
@@ -31,7 +31,7 @@ output "environment_variables" {
 
 output "next_steps" {
   description = "Next steps after deployment"
-  value = <<-EOT
+  value       = <<-EOT
     
     ============================================================
     DEPLOYMENT COMPLETE!

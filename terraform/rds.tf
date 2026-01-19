@@ -83,10 +83,6 @@ resource "aws_db_instance" "main" {
   # Security
   storage_encrypted = true
 
-  # Performance Insights (free tier available)
-  performance_insights_enabled          = true
-  performance_insights_retention_period = 7
-
   # Deletion protection (disable for dev environments)
   deletion_protection       = var.environment == "prod" ? true : false
   skip_final_snapshot       = var.environment != "prod"

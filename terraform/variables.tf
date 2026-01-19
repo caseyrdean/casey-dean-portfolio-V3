@@ -93,7 +93,7 @@ variable "db_password" {
 variable "github_repository" {
   description = "GitHub repository for Amplify (format: owner/repo)"
   type        = string
-  default     = "caseyrdean/casey-dean-portfolio"
+  default     = "caseyrdean/casey-dean-portfolio-V3"
 }
 
 variable "github_branch" {
@@ -188,7 +188,7 @@ variable "tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
   default = {
-    Project     = "casey-dean-portfolio"
+    Project     = "casey-dean-portfolio-V3"
     ManagedBy   = "terraform"
     Environment = "prod"
   }
