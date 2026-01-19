@@ -51,13 +51,12 @@ Set these in AWS Amplify Console → App settings → Environment variables:
 | `NODE_ENV` | Set to `production` | Yes |
 | `DATABASE_URL` | MySQL connection string with SSL | Yes |
 | `JWT_SECRET` | Secret for session tokens (min 32 chars) | Yes |
+| `ADMIN_PASSWORD` | Admin login password | Yes |
 | `OPENAI_API_KEY` | OpenAI API key for The Oracle | Yes |
 | `OWNER_NAME` | Your display name | Yes |
-| `OWNER_OPEN_ID` | Your OpenID for authentication | No |
-| `VITE_APP_ID` | Application identifier | Yes |
 | `VITE_APP_TITLE` | Website title | Yes |
-| `AWS_S3_BUCKET` | S3 bucket for uploads | Yes |
-| `AWS_S3_REGION` | S3 bucket region | Yes |
+| `S3_BUCKET_NAME` | S3 bucket for uploads (AWS_ prefix not allowed) | Yes |
+| `S3_REGION` | S3 bucket region (AWS_ prefix not allowed) | Yes |
 
 ### Database URL Format
 

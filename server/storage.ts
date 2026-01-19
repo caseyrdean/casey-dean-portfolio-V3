@@ -1,10 +1,10 @@
 /**
  * AWS S3 Storage Helpers - Standalone Version
- * 
+ *
  * Direct S3 integration without Manus proxy.
- * Requires AWS_S3_BUCKET and AWS_S3_REGION environment variables.
- * Uses AWS SDK credentials from environment (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
- * or IAM role when running on AWS infrastructure.
+ * Requires S3_BUCKET_NAME and S3_REGION environment variables.
+ * Uses AWS SDK credentials from IAM role when running on AWS infrastructure (Amplify, EC2, ECS).
+ * For local development, set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your environment.
  */
 
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
@@ -15,16 +15,16 @@ let s3Client: S3Client | null = null;
 
 function getS3Client(): S3Client {
   if (!s3Client) {
-    const region = process.env.AWS_S3_REGION || process.env.AWS_REGION || "us-east-1";
+    const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
     s3Client = new S3Client({ region });
   }
   return s3Client;
 }
 
 function getBucket(): string {
-  const bucket = process.env.AWS_S3_BUCKET;
+  const bucket = process.env.S3_BUCKET_NAME;
   if (!bucket) {
-    throw new Error("AWS_S3_BUCKET environment variable is not set");
+    throw new Error("S3_BUCKET_NAME environment variable is not set");
   }
   return bucket;
 }
@@ -59,7 +59,7 @@ export async function storagePut(
   await client.send(command);
 
   // Construct public URL (assumes bucket has public read access or CloudFront)
-  const region = process.env.AWS_S3_REGION || process.env.AWS_REGION || "us-east-1";
+  const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
   const url = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
 
   return { key, url };
@@ -97,6 +97,6 @@ export async function storageGet(
 export function getPublicUrl(relKey: string): string {
   const bucket = getBucket();
   const key = normalizeKey(relKey);
-  const region = process.env.AWS_S3_REGION || process.env.AWS_REGION || "us-east-1";
+  const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
   return `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
 }

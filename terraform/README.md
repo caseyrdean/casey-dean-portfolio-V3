@@ -164,8 +164,8 @@ The following environment variables are automatically configured in Amplify:
 |----------|-------------|
 | `DATABASE_URL` | MySQL connection string |
 | `JWT_SECRET` | JWT signing secret |
-| `AWS_S3_BUCKET` | S3 bucket name for uploads |
-| `AWS_S3_REGION` | S3 bucket region |
+| `S3_BUCKET_NAME` | S3 bucket name for uploads |
+| `S3_REGION` | S3 bucket region |
 | `OWNER_NAME` | Site owner name |
 | `OWNER_EMAIL` | Site owner email |
 
@@ -331,8 +331,8 @@ The Amplify app requires these environment variables (automatically set by Terra
 |----------|-------------|
 | `DATABASE_URL` | MySQL connection string |
 | `JWT_SECRET` | Secret for session tokens |
-| `AWS_S3_BUCKET` | S3 bucket name for uploads |
-| `AWS_REGION` | AWS region |
+| `S3_BUCKET_NAME` | S3 bucket name for uploads |
+| `S3_REGION` | S3 bucket region |
 
 ## Cost Estimate
 

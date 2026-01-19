@@ -1,4 +1,4 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, blogPosts, InsertBlogPost, BlogPost, blogAttachments, InsertBlogAttachment, BlogAttachment, projects, InsertProject, Project } from "../drizzle/schema";
 // Environment variables accessed directly from process.env
@@ -285,32 +285,20 @@ export async function getAllActiveChunks(): Promise<DocumentChunk[]> {
   if (activeDocIds.length === 0) return [];
   
   const ids = activeDocIds.map(d => d.id);
-  
-  // Get all chunks from active documents
-  const allChunks: DocumentChunk[] = [];
-  for (const docId of ids) {
-    const chunks = await db.select().from(documentChunks)
-      .where(eq(documentChunks.documentId, docId));
-    allChunks.push(...chunks);
-  }
-  
-  return allChunks;
+
+  // Get all chunks from active documents using a single query
+  return db.select().from(documentChunks)
+    .where(inArray(documentChunks.documentId, ids));
 }
 
 export async function getChunksByIds(ids: number[]): Promise<DocumentChunk[]> {
   const db = await getDb();
   if (!db) return [];
   if (ids.length === 0) return [];
-  
-  const chunks: DocumentChunk[] = [];
-  for (const id of ids) {
-    const result = await db.select().from(documentChunks)
-      .where(eq(documentChunks.id, id))
-      .limit(1);
-    if (result[0]) chunks.push(result[0]);
-  }
-  
-  return chunks;
+
+  // Use a single query with inArray instead of looping
+  return db.select().from(documentChunks)
+    .where(inArray(documentChunks.id, ids));
 }
 
 // Oracle Conversation Queries

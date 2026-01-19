@@ -7,8 +7,8 @@
 output "deployment_summary" {
   description = "Summary of deployed resources"
   value = {
-    application_url   = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.main.default_domain}"
-    database_endpoint = aws_db_instance.main.endpoint
+    application_url    = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.main.default_domain}"
+    database_endpoint  = aws_db_instance.main.endpoint
     s3_bucket         = aws_s3_bucket.uploads.id
     region            = var.aws_region
   }
@@ -18,17 +18,20 @@ output "environment_variables" {
   description = "Environment variables to configure (if not using Amplify)"
   sensitive   = true
   value = {
-    DATABASE_URL          = local.database_url
-    AWS_S3_BUCKET         = aws_s3_bucket.uploads.id
-    AWS_S3_REGION         = var.aws_region
-    AWS_ACCESS_KEY_ID     = aws_iam_access_key.app.id
-    AWS_SECRET_ACCESS_KEY = aws_iam_access_key.app.secret
+    DATABASE_URL   = local.database_url
+    S3_BUCKET_NAME = aws_s3_bucket.uploads.id
+    S3_REGION      = var.aws_region
+    # Note: APP_AWS_ACCESS_KEY_ID and APP_AWS_SECRET_ACCESS_KEY are provided below
+    # but are NOT needed in Amplify environment variables.
+    # Amplify uses the IAM role (amplify_role_arn) for S3 access automatically.
+    APP_AWS_ACCESS_KEY_ID     = aws_iam_access_key.app.id
+    APP_AWS_SECRET_ACCESS_KEY = aws_iam_access_key.app.secret
   }
 }
 
 output "next_steps" {
   description = "Next steps after deployment"
-  value       = <<-EOT
+  value = <<-EOT
     
     ============================================================
     DEPLOYMENT COMPLETE!

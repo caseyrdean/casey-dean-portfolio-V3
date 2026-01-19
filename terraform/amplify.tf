@@ -24,7 +24,7 @@ resource "aws_amplify_app" "main" {
   build_spec = <<-EOT
     version: 1
     applications:
-      - appRoot: /
+      - appRoot: .
         frontend:
           phases:
             preBuild:
@@ -61,13 +61,7 @@ resource "aws_amplify_app" "main" {
   EOT
 
   # Environment variables
-  dynamic "environment_variables" {
-    for_each = local.amplify_env_vars
-    content {
-      name  = environment_variables.key
-      value = environment_variables.value
-    }
-  }
+  environment_variables = local.amplify_env_vars
 
   # Custom rules for SPA routing
   custom_rule {
