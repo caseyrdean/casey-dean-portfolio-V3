@@ -60,7 +60,7 @@ applications:
             # Build frontend and backend
             - pnpm run build
             # Run database migrations
-            - pnpm run db:push
+            # - pnpm run db:push # Commented out for db connection erorrs during build
       artifacts:
         # Backend bundle
         baseDirectory: dist
