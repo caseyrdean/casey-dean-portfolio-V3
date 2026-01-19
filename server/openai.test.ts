@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { describe, it, expect } from "vitest";
 import OpenAI from "openai";
 

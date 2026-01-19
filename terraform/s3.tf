@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "uploads" {
 
 resource "aws_s3_bucket_versioning" "uploads" {
   bucket = aws_s3_bucket.uploads.id
-  
+
   versioning_configuration {
     status = "Enabled"
   }
@@ -62,7 +62,7 @@ resource "aws_s3_bucket_public_access_block" "uploads" {
 
 resource "aws_s3_bucket_policy" "uploads" {
   bucket = aws_s3_bucket.uploads.id
-  
+
   depends_on = [aws_s3_bucket_public_access_block.uploads]
 
   policy = jsonencode({
@@ -89,7 +89,7 @@ resource "aws_s3_bucket_cors_configuration" "uploads" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "PUT", "POST", "DELETE", "HEAD"]
-    allowed_origins = ["*"]  # Update with your domain in production
+    allowed_origins = ["*"] # Update with your domain in production
     expose_headers  = ["ETag", "Content-Length", "Content-Type"]
     max_age_seconds = 3600
   }

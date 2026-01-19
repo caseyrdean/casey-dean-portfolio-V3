@@ -34,7 +34,7 @@ variable "environment" {
   description = "Deployment environment (dev, staging, prod)"
   type        = string
   default     = "prod"
-  
+
   validation {
     condition     = contains(["dev", "staging", "prod"], var.environment)
     error_message = "Environment must be one of: dev, staging, prod"
@@ -55,7 +55,7 @@ variable "db_allocated_storage" {
   description = "Allocated storage for RDS in GB"
   type        = number
   default     = 20
-  
+
   validation {
     condition     = var.db_allocated_storage >= 20
     error_message = "Minimum storage is 20 GB"
@@ -79,7 +79,7 @@ variable "db_password" {
   description = "REQUIRED: Master password for the database (min 8 characters)"
   type        = string
   sensitive   = true
-  
+
   validation {
     condition     = length(var.db_password) >= 8
     error_message = "Database password must be at least 8 characters"
@@ -119,7 +119,7 @@ variable "jwt_secret" {
   description = "REQUIRED: Secret key for JWT token signing (min 32 characters). Generate with: openssl rand -hex 32"
   type        = string
   sensitive   = true
-  
+
   validation {
     condition     = length(var.jwt_secret) >= 32
     error_message = "JWT secret must be at least 32 characters for security"
@@ -130,7 +130,7 @@ variable "admin_password" {
   description = "REQUIRED: Admin password for login at /admin/login. Can be plain text or bcrypt hash (starting with $2)"
   type        = string
   sensitive   = true
-  
+
   validation {
     condition     = length(var.admin_password) >= 8
     error_message = "Admin password must be at least 8 characters"
@@ -157,7 +157,7 @@ variable "openai_api_key" {
   description = "REQUIRED: OpenAI API key for The Oracle AI assistant (starts with sk-)"
   type        = string
   sensitive   = true
-  
+
   validation {
     condition     = can(regex("^sk-", var.openai_api_key))
     error_message = "OpenAI API key must start with 'sk-'"

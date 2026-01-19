@@ -113,7 +113,7 @@ export default function TheOracle() {
   // Welcome message when first opened
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const welcomeMessage = "Greetings, seeker of knowledge. I am The Oracle, keeper of the sacred scrolls of Casey Dean's professional journey. Ask me anything about his cloud architecture expertise, his projects, or his mystical AWS powers. The spirits shall reveal the truth that dwells within the sacred documents.";
+      const welcomeMessage = "Greetings, seeker of knowledge. I am The Oracle, keeper of the sacred scrolls of Casey Dean's professional journey. Ask me anything about his cloud architecture experience, his projects, or his mystical AWS powers. The spirits shall reveal the truth.";
       setMessages([{
         role: 'oracle',
         content: welcomeMessage

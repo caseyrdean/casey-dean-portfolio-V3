@@ -32,8 +32,7 @@ export default function NotFound() {
               SYSTEM ERROR
             </h2>
             <p className="text-lg font-body text-muted-foreground leading-relaxed">
-              The requested resource could not be located in the cloud infrastructure. 
-              This page may have been moved or deleted.
+              Please excuse our dust as we curate your experience! It looks like this page can't be found. That's ok! Everything is backed up on my LinkedIn!
             </p>
           </div>
           

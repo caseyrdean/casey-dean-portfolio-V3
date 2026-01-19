@@ -12,14 +12,14 @@ export default function VHSGlitch() {
     // Trigger glitch every 30 seconds
     const interval = setInterval(() => {
       setIsGlitching(true);
-      // Glitch lasts 500ms - more pronounced
-      setTimeout(() => setIsGlitching(false), 500);
+      // Glitch lasts 600ms - more pronounced
+      setTimeout(() => setIsGlitching(false), 600);
     }, 30000);
 
     // Initial glitch after 3 seconds to show it's working
     const initialTimeout = setTimeout(() => {
       setIsGlitching(true);
-      setTimeout(() => setIsGlitching(false), 500);
+      setTimeout(() => setIsGlitching(false), 600);
     }, 3000);
 
     return () => {
