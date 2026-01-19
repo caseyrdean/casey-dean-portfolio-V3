@@ -98,9 +98,9 @@ locals {
     # Owner information (displayed in UI)
     OWNER_NAME = var.owner_name
     
-    # AWS S3 configuration for file uploads
-    AWS_S3_BUCKET = local.s3_bucket_name
-    AWS_S3_REGION = var.aws_region
+    # S3 configuration for file uploads (AWS_ prefix not allowed in Amplify)
+    S3_BUCKET_NAME = local.s3_bucket_name
+    S3_REGION      = var.aws_region
     
     # Application title (used in browser tab, meta tags)
     VITE_APP_TITLE = var.app_title

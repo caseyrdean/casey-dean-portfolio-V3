@@ -53,8 +53,8 @@ The application requires these environment variables. All are configured automat
 | `JWT_SECRET` | Secret for signing JWT tokens (min 32 chars) | Yes | Yes |
 | `ADMIN_PASSWORD` | Password for admin login at `/admin/login` | Yes | Yes |
 | `OWNER_NAME` | Display name shown in UI | Yes | No |
-| `AWS_S3_BUCKET` | S3 bucket name for file uploads | Yes | No |
-| `AWS_S3_REGION` | AWS region for S3 bucket | Yes | No |
+| `S3_BUCKET_NAME` | S3 bucket name for file uploads (AWS_ prefix not allowed in Amplify) | Yes | No |
+| `S3_REGION` | AWS region for S3 bucket (AWS_ prefix not allowed in Amplify) | Yes | No |
 | `OPENAI_API_KEY` | OpenAI API key for The Oracle | Yes | Yes |
 | `VITE_APP_TITLE` | Browser tab title | No | No |
 | `NODE_ENV` | Environment mode (`production`) | No | No |

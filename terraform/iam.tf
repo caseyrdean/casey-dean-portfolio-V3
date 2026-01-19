@@ -118,13 +118,13 @@ output "amplify_role_arn" {
 }
 
 output "app_access_key_id" {
-  description = "Access key ID for the application user"
+  description = "Access key ID for the application user (not needed in Amplify - use IAM role instead)"
   value       = aws_iam_access_key.app.id
   sensitive   = true
 }
 
 output "app_secret_access_key" {
-  description = "Secret access key for the application user"
+  description = "Secret access key for the application user (not needed in Amplify - use IAM role instead)"
   value       = aws_iam_access_key.app.secret
   sensitive   = true
 }
