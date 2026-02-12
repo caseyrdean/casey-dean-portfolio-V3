@@ -22,7 +22,7 @@ export default function Home() {
         {/* Background image with overlay */}
         <div className="absolute inset-0">
           <img 
-            src="/images/hero-main.png" 
+            src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663293102400/BWZmkDcewVbtfIUs.png" 
             alt="Cloud Architecture" 
             className="w-full h-full object-cover"
           />

@@ -9,14 +9,10 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
-import path from "path";
-import { fileURLToPath } from "url";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./routers";
 import { createContext } from "./context";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { setupVite, serveStatic } from "./_core/vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -54,29 +50,11 @@ async function startServer() {
     })
   );
   
-  // Serve static files
-  const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
-
-  app.use(express.static(staticPath));
-
-  // SPA fallback - serve index.html for all non-API routes
-  app.get("*", (req, res) => {
-    if (!req.path.startsWith("/api")) {
-      res.sendFile(path.join(staticPath, "index.html"));
-    }
-  });
-
-  // Development mode - use Vite dev server
+  // Development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
-    try {
-      const { setupVite } = await import("./_core/vite");
-      await setupVite(app, server);
-    } catch (e) {
-      console.log("[Dev] Vite setup skipped - running in standalone mode");
-    }
+    await setupVite(app, server);
+  } else {
+    serveStatic(app);
   }
 
   const preferredPort = parseInt(process.env.PORT || "3000");
