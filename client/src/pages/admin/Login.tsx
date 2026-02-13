@@ -6,7 +6,6 @@
  */
 
 import { useState } from "react";
-import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,13 +14,13 @@ import { Lock, AlertCircle, Loader2 } from "lucide-react";
 export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [, setLocation] = useLocation();
 
   const loginMutation = trpc.auth.login.useMutation({
     onSuccess: (data) => {
       if (data.success) {
-        // Redirect to admin dashboard
-        setLocation("/admin/blog");
+        // Full page navigation so the browser sends the new cookie
+        // and all queries re-fetch with the authenticated session
+        window.location.href = "/admin/blog";
       } else {
         setError(data.error || "Login failed");
       }
