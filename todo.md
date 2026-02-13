@@ -202,3 +202,6 @@
 - [x] Add resilient error handling: DB failures no longer block RAG responses
 - [ ] Fix knowledge document upload spinning indefinitely in production (needs publish to verify)
 - [x] Diagnose Oracle knowledge sourcing path (3 sources: LinkedIn profile, website scraper, knowledge_documents table)
+
+## Experience Section Update
+- [x] Replace hardcoded experience entries in Home.tsx with professional experience from Casey_Dean_CSA_Markdown.md

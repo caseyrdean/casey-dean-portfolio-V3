@@ -196,22 +196,34 @@ export default function Home() {
               
               {[
                 {
-                  year: "2025",
-                  title: "AWS Solutions Architect - Associate",
-                  org: "Amazon Web Services",
-                  description: "SAA-C03 certification demonstrating expertise in designing distributed systems on AWS. Valid through November 2028."
+                  year: "09/2024 – Present",
+                  title: "Solutions Consultant, PS",
+                  org: "Jaggaer",
+                  description: "Led AI adoption as Professional Services AI Enablement Lead, enabling 500+ global PS members to build internal tools with ChatGPT Enterprise and Google Gemini, and leading the PS Center of Excellence for 100+ Solutions Consultants. Gained 90% adoption.\n\nOwned end-to-end AI solution architecture and delivery for enterprise SaaS offerings, translating complex business and compliance requirements into secure, scalable cloud-backed designs from discovery through production.\n\nServed as primary architectural advisor to client stakeholders, guiding trade-offs across integrations, data models, security controls, and extensibility within SOW constraints.\n\nBridged business, engineering, and support teams by documenting architectural decisions and system workflows, preserving intent and enabling smooth operational handoff."
                 },
                 {
-                  year: "2019",
-                  title: "Successful Startup Exit",
+                  year: "05/2022 – 06/2024",
+                  title: "Senior Innovation Mgmt Consultant",
+                  org: "SOPHEON",
+                  description: "Led design and delivery of enterprise SaaS solutions across $15M+ ARR in federal contracts, aligning execution with stakeholder goals and mission outcomes.\n\nDelivered 12 DoD solutions, guiding FedRAMP-aligned architecture decisions to balance security, performance, and operational sustainability.\n\nAligned platform capabilities to stakeholder outcomes, reducing delivery timelines by 18% and improving project efficiency.\n\nLed complex SaaS migrations and re-implementations, ensuring secure, performance-optimized configurations across enterprise environments."
+                },
+                {
+                  year: "02/2019 – 05/2022",
+                  title: "Principal Consultant / Founder",
+                  org: "Wilde Group",
+                  description: "Led Fortune 500 engagements, facilitating design thinking workshops to define 0–1 solutions and set early solution architecture direction.\n\nTranslated qualitative and quantitative research into prioritized technical requirements, informing delivery planning for nine enterprise innovation initiatives.\n\nPartnered with engineering leads to assess system constraints, integration risks, and technology gaps, delivering architecture recommendations that reduced blockers by 25% across three business units.\n\nServed as a bridge between engineering teams and the C-suite, accelerating technology alignment and reducing early-stage decision cycles by 30%."
+                },
+                {
+                  year: "09/2018 – 06/2020",
+                  title: "Lead Analyst, Global Talent",
+                  org: "Stryker",
+                  description: "Unified global recruiting data models from BrassRing into Workday, creating a centralized analytics foundation that improved executive reporting efficiency by 35%.\n\nBuilt scalable analytics platforms eliminating 40+ manual reports and restoring end-to-end talent lifecycle visibility.\n\nEnabled 500+ global recruiters and leaders through data-driven training and workflow redesign, improving adoption and decision quality."
+                },
+                {
+                  year: "02/2016 – 12/2018",
+                  title: "Founding Partner",
                   org: "Elegant Solutions",
-                  description: "Founded healthcare IoT company that was acquired after proving 65% improvement in hospital survey participation."
-                },
-                {
-                  year: "2016",
-                  title: "BBA Entrepreneurship",
-                  org: "University of Wisconsin - Whitewater",
-                  description: "Bachelor of Business Administration with focus on Entrepreneurship."
+                  description: "Founded and scaled a healthcare technology venture, leading deep discovery with 200+ ER patients, clinicians, and executives to surface systemic workflow, communication, and transparency failures.\n\nDefined product vision and led MVP delivery, converting frontline insights into a patient-facing ER platform that increased throughput by 5% and boosted federal survey participation by 65% during pilot rollout.\n\nEstablished KPI-driven reporting and recovery capabilities that improved executive decision-making, strengthened enterprise adoption, and directly contributed to the company's acquisition in 2019."
                 }
               ].map((award, i) => (
                 <div key={i} className="border-l-2 border-accent/50 pl-6 pb-6 relative group hover:border-accent transition-colors">
