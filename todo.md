@@ -159,3 +159,8 @@
 
 ## Admin Login Fix
 - [x] Fix admin login not navigating to admin panel after successful authentication
+
+## Admin Login Deep Fix
+- [x] Investigate full auth chain end-to-end
+- [x] Fix root cause of admin panel inaccessibility (improved error handling + window.location.href redirect)
+- [x] Verify login works in browser (tested successfully)

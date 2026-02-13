@@ -68,16 +68,29 @@ export const appRouter = router({
     login: publicProcedure
       .input(z.object({ password: z.string().min(1) }))
       .mutation(async ({ ctx, input }) => {
-        const result = await loginWithPassword(input.password);
-        
-        if (!result) {
-          return { success: false, error: "Invalid password" };
+        try {
+          const result = await loginWithPassword(input.password);
+          
+          if (!result) {
+            return { success: false as const, error: "Invalid password" };
+          }
+          
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie(AUTH_COOKIE_NAME, result.token, cookieOptions);
+          
+          return { success: true as const, user: result.user };
+        } catch (err: any) {
+          // Catch env var errors and return user-friendly message
+          if (err?.message?.includes('ADMIN_PASSWORD')) {
+            console.error('[Auth] ADMIN_PASSWORD not configured:', err.message);
+            return { success: false as const, error: "Admin login is not configured. Set ADMIN_PASSWORD in environment variables." };
+          }
+          if (err?.message?.includes('JWT_SECRET')) {
+            console.error('[Auth] JWT_SECRET not configured:', err.message);
+            return { success: false as const, error: "Server authentication is not configured. Set JWT_SECRET in environment variables." };
+          }
+          throw err;
         }
-        
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.cookie(AUTH_COOKIE_NAME, result.token, cookieOptions);
-        
-        return { success: true, user: result.user };
       }),
     
     logout: publicProcedure.mutation(({ ctx }) => {
