@@ -190,3 +190,9 @@
 - [x] Fix root causes: updated _core/index.ts to use standalone context, added Oracle error handling
 - [x] Verify Oracle works in browser (tested successfully)
 - [x] Build:manus compiles successfully
+
+## Remove All Manus Code Paths
+- [x] Make build:manus and dev:manus use standalone server/index.ts
+- [x] Build:manus compiles successfully with standalone entry point
+- [x] All 45 tests passing
+- [x] Dev server running correctly
