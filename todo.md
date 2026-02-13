@@ -205,3 +205,7 @@
 
 ## Experience Section Update
 - [x] Replace hardcoded experience entries in Home.tsx with professional experience from Casey_Dean_CSA_Markdown.md
+
+## Experience Section Correction
+- [x] Revert credentials section to original (AWS cert, startup exit, BBA)
+- [x] Add separate professional experience section with 5 roles from resume
