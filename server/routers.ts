@@ -81,6 +81,47 @@ export const appRouter = router({
         dotenvLoaded: true,
       };
     }),
+    oracleDiagnostic: publicProcedure.query(async () => {
+      const steps: Record<string, any> = {};
+      try {
+        // Step 1: Check OpenAI key
+        const apiKey = process.env.OPENAI_API_KEY;
+        steps.openaiKeyPresent = !!apiKey;
+        if (!apiKey) return { steps, error: "OPENAI_API_KEY not set" };
+
+        // Step 2: Test OpenAI connection
+        const OpenAI = (await import("openai")).default;
+        const openai = new OpenAI({ apiKey, baseURL: "https://api.openai.com/v1" });
+        steps.openaiClientCreated = true;
+
+        // Step 3: Test a minimal completion
+        const response = await openai.chat.completions.create({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: "Say hello" }],
+          max_tokens: 10,
+        });
+        steps.openaiCallSuccess = true;
+        steps.openaiResponse = response.choices[0]?.message?.content;
+        steps.tokensUsed = response.usage?.total_tokens;
+
+        // Step 4: Test database knowledge fetch
+        const { getAllKnowledgeDocuments } = await import("./db");
+        const docs = await getAllKnowledgeDocuments(true);
+        steps.knowledgeDocsCount = docs.length;
+        steps.knowledgeDocTitles = docs.map((d: any) => d.title);
+
+        // Step 5: Test comprehensive scraper
+        const { fetchComprehensiveWebsiteContent } = await import("./comprehensive-scraper");
+        const websiteContent = await fetchComprehensiveWebsiteContent();
+        steps.websiteContentLength = websiteContent?.length || 0;
+        steps.websiteContentAvailable = !!websiteContent;
+
+        return { steps, error: null, status: "ALL SYSTEMS OPERATIONAL" };
+      } catch (err: any) {
+        steps.failedAt = Object.keys(steps).pop();
+        return { steps, error: err.message, errorCode: err.code, errorType: err.constructor.name };
+      }
+    }),
   }),
 
   // Authentication routes
