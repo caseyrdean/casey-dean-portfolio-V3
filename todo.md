@@ -209,3 +209,6 @@
 ## Experience Section Correction
 - [x] Revert credentials section to original (AWS cert, startup exit, BBA)
 - [x] Add separate professional experience section with 5 roles from resume
+
+## Add Sopheon Award
+- [x] Add 2022 Consultant of the Year award to credentials section

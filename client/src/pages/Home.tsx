@@ -202,6 +202,12 @@ export default function Home() {
                   description: "SAA-C03 certification demonstrating expertise in designing distributed systems on AWS. Valid through November 2028."
                 },
                 {
+                  year: "2022",
+                  title: "Consultant of the Year - Teamwork",
+                  org: "Sopheon",
+                  description: "Recognized for exceptional collaboration and teamwork in delivering enterprise SaaS solutions across federal contracts."
+                },
+                {
                   year: "2019",
                   title: "Successful Startup Exit",
                   org: "Elegant Solutions",
