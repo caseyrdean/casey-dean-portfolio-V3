@@ -1,0 +1,24 @@
+{
+  "query": "SELECT id, openId, name, role, loginMethod FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SELECT id, openId, name, role, loginMethod FROM users;",
+  "rows": [
+    {
+      "id": "1",
+      "openId": "oAKJuiJBwFSnfVunyuGwjz",
+      "name": "Casey Dean",
+      "role": "admin",
+      "loginMethod": "google"
+    },
+    {
+      "id": "330001",
+      "openId": "admin",
+      "name": "Casey Dean",
+      "role": "admin",
+      "loginMethod": "password"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\trole\tloginMethod\n1\toAKJuiJBwFSnfVunyuGwjz\tCasey Dean\tadmin\tgoogle\n330001\tadmin\tCasey Dean\tadmin\tpassword\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

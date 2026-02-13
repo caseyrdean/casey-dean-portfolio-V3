@@ -431,43 +431,58 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const startTime = Date.now();
         
-        // Get or create conversation
-        const ipAddress = ctx.req.headers['x-forwarded-for'] as string || ctx.req.socket?.remoteAddress;
-        const conversationId = await getOrCreateConversation(
-          input.sessionId,
-          ctx.user?.id,
-          ipAddress
-        );
+        // Try to save conversation history, but don't let DB failures block the response
+        let conversationId: number | null = null;
+        let conversationHistory: { role: 'user' | 'oracle'; content: string }[] = [];
         
-        // Save user message
-        await createMessage({
-          conversationId,
-          role: 'user',
-          content: input.message,
-        });
+        try {
+          // x-forwarded-for can contain comma-separated IPs like "clientIP, proxyIP"
+          // Extract only the first (client) IP and truncate to fit varchar(45)
+          const rawIp = ctx.req.headers['x-forwarded-for'] as string || ctx.req.socket?.remoteAddress || '';
+          const ipAddress = rawIp.split(',')[0].trim().substring(0, 45) || undefined;
+          conversationId = await getOrCreateConversation(
+            input.sessionId,
+            ctx.user?.id,
+            ipAddress
+          );
+          
+          await createMessage({
+            conversationId,
+            role: 'user',
+            content: input.message,
+          });
+          
+          const history = await getMessagesByConversationId(conversationId, 10);
+          conversationHistory = history.map(m => ({
+            role: m.role as 'user' | 'oracle',
+            content: m.content
+          }));
+        } catch (dbErr: any) {
+          // Database operations failed - log but continue with RAG response
+          console.error('[Oracle] Database error (non-fatal, continuing with RAG):', dbErr?.message || dbErr);
+        }
         
-        // Get conversation history
-        const history = await getMessagesByConversationId(conversationId, 10);
-        const conversationHistory = history.map(m => ({
-          role: m.role as 'user' | 'oracle',
-          content: m.content
-        }));
-        
-        // Generate RAG response
+        // Generate RAG response - this is the critical path
         try {
           const result = await generateRAGResponse(input.message, conversationHistory.slice(0, -1));
           
           const responseTimeMs = Date.now() - startTime;
           
-          // Save Oracle response
-          await createMessage({
-            conversationId,
-            role: 'oracle',
-            content: result.response,
-            sourceChunkIds: JSON.stringify(result.sourceChunkIds || []),
-            hasKnowledge: result.hasKnowledge,
-            responseTimeMs,
-          });
+          // Try to save Oracle response (non-fatal if it fails)
+          if (conversationId !== null) {
+            try {
+              await createMessage({
+                conversationId,
+                role: 'oracle',
+                content: result.response,
+                sourceChunkIds: JSON.stringify(result.sourceChunkIds || []),
+                hasKnowledge: result.hasKnowledge,
+                responseTimeMs,
+              });
+            } catch (saveErr: any) {
+              console.error('[Oracle] Failed to save response (non-fatal):', saveErr?.message);
+            }
+          }
           
           return {
             response: result.response,
@@ -476,23 +491,28 @@ export const appRouter = router({
           };
         } catch (err: any) {
           console.error('[Oracle] Error generating response:', err?.message || err);
-          // Return a graceful error response instead of crashing
           const errorMsg = err?.message || 'Unknown error';
           const responseTimeMs = Date.now() - startTime;
           
-          // Save error as oracle response for debugging
           const fallbackResponse = errorMsg.includes('OPENAI_API_KEY')
             ? 'The Oracle cannot connect — OPENAI_API_KEY is not configured in the server environment.'
             : errorMsg.includes('API key') || errorMsg.includes('401')
             ? 'The Oracle\'s API key appears to be invalid. Please check the OPENAI_API_KEY.'
             : 'The Oracle encountered an error processing your question. Please try again.';
           
-          await createMessage({
-            conversationId,
-            role: 'oracle',
-            content: fallbackResponse,
-            responseTimeMs,
-          });
+          // Try to save error response (non-fatal)
+          if (conversationId !== null) {
+            try {
+              await createMessage({
+                conversationId,
+                role: 'oracle',
+                content: fallbackResponse,
+                responseTimeMs,
+              });
+            } catch (saveErr: any) {
+              console.error('[Oracle] Failed to save error response:', saveErr?.message);
+            }
+          }
           
           return {
             response: fallbackResponse,
@@ -543,18 +563,31 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const { filename, title, description, mimeType, data, docType } = input;
         
+        console.log(`[Knowledge] Starting upload: ${title} (${filename}, ${mimeType})`);
+        
         // Decode base64 data
         const buffer = Buffer.from(data, "base64");
         const rawContent = buffer.toString('utf-8');
+        console.log(`[Knowledge] Decoded content: ${buffer.length} bytes, ${rawContent.length} chars`);
         
         // Generate unique file key
         const uniqueId = nanoid(10);
         const fileKey = `knowledge/${docType}/${uniqueId}-${filename}`;
         
-        // Upload to S3
-        const { url } = await storagePut(fileKey, buffer, mimeType);
+        // Upload to S3 (falls back to data URL if S3 not configured)
+        let url: string;
+        try {
+          const result = await storagePut(fileKey, buffer, mimeType);
+          url = result.url;
+          console.log(`[Knowledge] Storage upload complete: ${url.substring(0, 80)}...`);
+        } catch (storageErr: any) {
+          console.error(`[Knowledge] Storage upload failed:`, storageErr?.message);
+          // Use a placeholder URL - the rawContent is what matters for RAG
+          url = `local://${fileKey}`;
+        }
         
         // Create document record
+        console.log(`[Knowledge] Creating document record...`);
         const docId = await createKnowledgeDocument({
           filename,
           title,
@@ -567,9 +600,11 @@ export const appRouter = router({
           rawContent,
           uploadedBy: ctx.user.id,
         });
+        console.log(`[Knowledge] Document created with ID: ${docId}`);
         
         // Process document into chunks
         const { chunkCount, chunks } = await processDocumentForRAG(docId, rawContent, mimeType);
+        console.log(`[Knowledge] Processed into ${chunkCount} chunks`);
         
         // Save chunks to database
         if (chunks.length > 0) {
@@ -584,6 +619,8 @@ export const appRouter = router({
         
         // Update document with chunk count
         await updateKnowledgeDocument(docId, { chunkCount });
+        
+        console.log(`[Knowledge] Upload complete: ${title} (${chunkCount} chunks)`);
         
         return { 
           id: docId, 

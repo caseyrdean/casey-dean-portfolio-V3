@@ -196,3 +196,9 @@
 - [x] Build:manus compiles successfully with standalone entry point
 - [x] All 45 tests passing
 - [x] Dev server running correctly
+
+## Production Oracle Issues
+- [x] Fix Oracle chat UI failing in production (root cause: x-forwarded-for header contains comma-separated IPs which overflows varchar(45) ipAddress column)
+- [x] Add resilient error handling: DB failures no longer block RAG responses
+- [ ] Fix knowledge document upload spinning indefinitely in production (needs publish to verify)
+- [x] Diagnose Oracle knowledge sourcing path (3 sources: LinkedIn profile, website scraper, knowledge_documents table)
