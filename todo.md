@@ -176,3 +176,10 @@
 - [x] Remove all Manus-specific dependencies (vite plugin, analytics, CDN URLs)
 - [x] End-to-end quality check as end user (all pages load, blog, projects, oracle)
 - [x] End-to-end quality check as admin (login, blog admin, project admin, knowledge admin)
+
+## Restore Images and Configure .env
+- [x] Find and restore all original project cover images (from webdev-static-assets)
+- [x] Restore hero background image (/images/hero-main.png)
+- [x] OpenAI API key configured via environment secrets (gitignored)
+- [x] Update project records in DB to use local image paths
+- [x] Verify site looks identical to before (all images loading, all pages working)

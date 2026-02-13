@@ -1,0 +1,26 @@
+{
+  "query": "SELECT slug, image FROM projects ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SELECT slug, image FROM projects ORDER BY id;",
+  "rows": [
+    {
+      "slug": "ai-agent-platform",
+      "image": "/images/project-serverless.png"
+    },
+    {
+      "slug": "dod-fedramp-solutions",
+      "image": "/images/project-security.png"
+    },
+    {
+      "slug": "fortune-500-innovation",
+      "image": "/images/project-cloud-migration.png"
+    },
+    {
+      "slug": "healthcare-iot-platform",
+      "image": "/images/project-kubernetes.png"
+    }
+  ],
+  "messages": [],
+  "stdout": "slug\timage\nai-agent-platform\t/images/project-serverless.png\ndod-fedramp-solutions\t/images/project-security.png\nfortune-500-innovation\t/images/project-cloud-migration.png\nhealthcare-iot-platform\t/images/project-kubernetes.png\n",
+  "stderr": "",
+  "execution_time_ms": 174
+}

@@ -21,8 +21,11 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background image with overlay */}
         <div className="absolute inset-0">
-          {/* Hero background - uses CSS gradient. Replace src with your own image URL if desired */}
-          <div className="w-full h-full bg-gradient-to-br from-primary/30 via-background to-secondary/20" />
+          <img 
+            src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663293102400/EqLqSzLvjPMSQQpj.png" 
+            alt="Cloud Architecture" 
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background"></div>
         </div>
         

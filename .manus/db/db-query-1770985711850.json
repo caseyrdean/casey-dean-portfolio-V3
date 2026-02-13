@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE projects SET image = '/images/project-serverless.png' WHERE slug = 'ai-agent-platform';\nUPDATE projects SET image = '/images/project-security.png' WHERE slug = 'dod-fedramp-solutions';\nUPDATE projects SET image = '/images/project-cloud-migration.png' WHERE slug = 'fortune-500-innovation';\nUPDATE projects SET image = '/images/project-kubernetes.png' WHERE slug = 'healthcare-iot-platform';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute UPDATE projects SET image = '/images/project-serverless.png' WHERE slug = 'ai-agent-platform';\nUPDATE projects SET image = '/images/project-security.png' WHERE slug = 'dod-fedramp-solutions';\nUPDATE projects SET image = '/images/project-cloud-migration.png' WHERE slug = 'fortune-500-innovation';\nUPDATE projects SET image = '/images/project-kubernetes.png' WHERE slug = 'healthcare-iot-platform';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 105
+}
