@@ -1,10 +1,11 @@
 /**
- * AWS S3 Storage Helpers - Standalone Version
+ * Platform-Agnostic File Storage
  *
- * Direct S3 integration without Manus proxy.
- * Requires S3_BUCKET_NAME and S3_REGION environment variables.
- * Uses AWS SDK credentials from IAM role when running on AWS infrastructure (Amplify, EC2, ECS).
- * For local development, set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your environment.
+ * Supports two modes:
+ * 1. AWS S3 (when S3_BUCKET_NAME is configured) - files stored in S3
+ * 2. Database fallback (no S3) - files stored as base64 in the database
+ *
+ * This ensures the app works everywhere: Manus, AWS, local, any cloud.
  */
 
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
@@ -12,6 +13,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // S3 client singleton
 let s3Client: S3Client | null = null;
+
+function isS3Configured(): boolean {
+  return !!(process.env.S3_BUCKET_NAME);
+}
 
 function getS3Client(): S3Client {
   if (!s3Client) {
@@ -22,11 +27,7 @@ function getS3Client(): S3Client {
 }
 
 function getBucket(): string {
-  const bucket = process.env.S3_BUCKET_NAME;
-  if (!bucket) {
-    throw new Error("S3_BUCKET_NAME environment variable is not set");
-  }
-  return bucket;
+  return process.env.S3_BUCKET_NAME!;
 }
 
 function normalizeKey(relKey: string): string {
@@ -34,69 +35,91 @@ function normalizeKey(relKey: string): string {
 }
 
 /**
- * Upload a file to S3
- * @param relKey - Relative path/key for the file in S3
- * @param data - File content as Buffer, Uint8Array, or string
- * @param contentType - MIME type of the file
- * @returns Object with key and public URL
+ * Upload a file to S3 (when configured) or return a data URL for DB storage.
+ * 
+ * When S3 is not configured, returns a data URL that can be stored directly
+ * in the database and served inline. This makes the app work without any
+ * external storage dependency.
  */
 export async function storagePut(
   relKey: string,
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream"
 ): Promise<{ key: string; url: string }> {
-  const client = getS3Client();
-  const bucket = getBucket();
   const key = normalizeKey(relKey);
 
-  const command = new PutObjectCommand({
-    Bucket: bucket,
-    Key: key,
-    Body: typeof data === "string" ? Buffer.from(data) : data,
-    ContentType: contentType,
-  });
+  if (isS3Configured()) {
+    // S3 mode: upload to bucket
+    const client = getS3Client();
+    const bucket = getBucket();
 
-  await client.send(command);
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: typeof data === "string" ? Buffer.from(data) : data,
+      ContentType: contentType,
+    });
 
-  // Construct public URL (assumes bucket has public read access or CloudFront)
-  const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
-  const url = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+    await client.send(command);
 
+    const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
+    const url = `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+    return { key, url };
+  }
+
+  // Fallback: create a data URL for inline storage
+  const buffer = typeof data === "string" ? Buffer.from(data) : Buffer.from(data);
+  const base64 = buffer.toString("base64");
+  const url = `data:${contentType};base64,${base64}`;
   return { key, url };
 }
 
 /**
- * Get a presigned URL for downloading a file from S3
- * @param relKey - Relative path/key for the file in S3
- * @param expiresIn - URL expiration time in seconds (default: 1 hour)
- * @returns Object with key and presigned URL
+ * Get a URL for downloading a file.
+ * With S3: returns a presigned URL.
+ * Without S3: returns the stored URL directly (data URL or external URL).
  */
 export async function storageGet(
   relKey: string,
   expiresIn = 3600
 ): Promise<{ key: string; url: string }> {
-  const client = getS3Client();
-  const bucket = getBucket();
   const key = normalizeKey(relKey);
 
-  const command = new GetObjectCommand({
-    Bucket: bucket,
-    Key: key,
-  });
+  if (isS3Configured()) {
+    const client = getS3Client();
+    const bucket = getBucket();
 
-  const url = await getSignedUrl(client, command, { expiresIn });
+    const command = new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    });
 
-  return { key, url };
+    const url = await getSignedUrl(client, command, { expiresIn });
+    return { key, url };
+  }
+
+  // Without S3, we can't retrieve by key - the URL should be stored in the DB
+  return { key, url: "" };
 }
 
 /**
- * Get public URL for a file (no presigning, assumes public bucket)
- * @param relKey - Relative path/key for the file in S3
- * @returns Public URL string
+ * Get public URL for a file.
+ * Only works with S3. Without S3, use the URL stored in the database.
  */
 export function getPublicUrl(relKey: string): string {
+  if (!isS3Configured()) {
+    return "";
+  }
   const bucket = getBucket();
   const key = normalizeKey(relKey);
   const region = process.env.S3_REGION || process.env.AWS_REGION || "us-east-1";
   return `https://${bucket}.s3.${region}.amazonaws.com/${key}`;
+}
+
+/**
+ * Check if external file storage (S3) is available.
+ * Useful for UI to show appropriate upload guidance.
+ */
+export function isStorageAvailable(): boolean {
+  return isS3Configured();
 }

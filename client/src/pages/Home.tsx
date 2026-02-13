@@ -21,11 +21,8 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background image with overlay */}
         <div className="absolute inset-0">
-          <img 
-            src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663293102400/BWZmkDcewVbtfIUs.png" 
-            alt="Cloud Architecture" 
-            className="w-full h-full object-cover"
-          />
+          {/* Hero background - uses CSS gradient. Replace src with your own image URL if desired */}
+          <div className="w-full h-full bg-gradient-to-br from-primary/30 via-background to-secondary/20" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background"></div>
         </div>
         
@@ -116,11 +113,19 @@ export default function Home() {
               <Link key={project.id} href={`/project/${project.slug}`} className="group block relative overflow-hidden border border-primary/30 bg-card hover:border-primary transition-all duration-500">
                   {/* Project Image */}
                   <div className="relative aspect-video overflow-hidden">
-                    <img 
-                      src={project.image || '/images/placeholder.png'} 
-                      alt={project.title || 'Project'}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
+                    {project.image ? (
+                      <img 
+                        src={project.image} 
+                        alt={project.title || 'Project'}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        onError={(e) => {
+                          // Hide broken image and show gradient fallback
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-full h-full bg-gradient-to-br from-primary/20 via-card to-secondary/20 ${project.image ? 'hidden absolute inset-0' : ''}`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
                     
                     {/* Hover overlay with details */}

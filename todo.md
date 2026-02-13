@@ -164,3 +164,15 @@
 - [x] Investigate full auth chain end-to-end
 - [x] Fix root cause of admin panel inaccessibility (improved error handling + window.location.href redirect)
 - [x] Verify login works in browser (tested successfully)
+
+## Comprehensive Platform-Agnostic Rebuild
+- [x] Audit all broken images and CDN URLs
+- [x] Fix storage layer to be platform-agnostic (S3 optional, fallback to DB)
+- [x] Fix project images (gradient fallbacks, admin can update URLs)
+- [x] Ensure blog CRUD works from website (verified in browser)
+- [x] Ensure project CRUD works from website (verified in browser)
+- [x] Ensure knowledge document CRUD works from website (verified in browser)
+- [x] Ensure credentials/contact section works (verified in browser)
+- [x] Remove all Manus-specific dependencies (vite plugin, analytics, CDN URLs)
+- [x] End-to-end quality check as end user (all pages load, blog, projects, oracle)
+- [x] End-to-end quality check as admin (login, blog admin, project admin, knowledge admin)

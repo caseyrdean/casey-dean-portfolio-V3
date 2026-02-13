@@ -50,15 +50,21 @@ import {
   getRecentConversations
 } from "./db";
 import { generateRAGResponse, processDocumentForRAG } from "./rag";
-import { storagePut } from "./storage";
+import { storagePut, isStorageAvailable } from "./storage";
 import { nanoid } from "nanoid";
 
 export const appRouter = router({
-  // System routes (health check only)
+  // System routes
   system: router({
     health: publicProcedure
       .input(z.object({ timestamp: z.number().min(0) }))
       .query(() => ({ ok: true })),
+    storageStatus: publicProcedure.query(() => ({
+      s3Available: isStorageAvailable(),
+      message: isStorageAvailable()
+        ? "S3 storage configured"
+        : "Using database storage (S3 not configured). Files stored as data URLs.",
+    })),
   }),
 
   // Authentication routes

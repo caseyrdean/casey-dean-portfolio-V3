@@ -5,19 +5,33 @@
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { getProjectBySlug } from "@/data/projects";
+import { trpc } from "@/lib/trpc";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Download, ExternalLink } from "lucide-react";
+import { ArrowLeft, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NotFound from "./NotFound";
 
 export default function ProjectDetail() {
   const [, params] = useRoute("/project/:slug");
-  const project = params?.slug ? getProjectBySlug(params.slug) : undefined;
+  const { data: project, isLoading } = trpc.project.bySlug.useQuery(
+    { slug: params?.slug || "" },
+    { enabled: !!params?.slug }
+  );
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
   
   if (!project) {
     return <NotFound />;
   }
+
+  const technologies = (project.technologies as string[]) || [];
+  const results = (project.results as string[]) || [];
   
   return (
     <div className="min-h-screen bg-background">
@@ -27,11 +41,15 @@ export default function ProjectDetail() {
       <section className="relative min-h-[60vh] flex items-end overflow-hidden pt-20">
         {/* Background image */}
         <div className="absolute inset-0">
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
+          {project.image ? (
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background"></div>
         </div>
         
@@ -71,65 +89,75 @@ export default function ProjectDetail() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-16">
             {/* Overview */}
-            <div className="space-y-6">
-              <h2 className="text-3xl font-display text-primary">OVERVIEW</h2>
-              <p className="text-lg font-body text-foreground leading-relaxed">
-                {project.description}
-              </p>
-            </div>
+            {project.description && (
+              <div className="space-y-6">
+                <h2 className="text-3xl font-display text-primary">OVERVIEW</h2>
+                <p className="text-lg font-body text-foreground leading-relaxed">
+                  {project.description}
+                </p>
+              </div>
+            )}
             
             {/* Challenge */}
-            <div className="border-l-4 border-secondary pl-8 space-y-6">
-              <h2 className="text-3xl font-display text-secondary">THE CHALLENGE</h2>
-              <p className="text-base font-body text-muted-foreground leading-relaxed">
-                {project.challenge}
-              </p>
-            </div>
+            {project.challenge && (
+              <div className="border-l-4 border-secondary pl-8 space-y-6">
+                <h2 className="text-3xl font-display text-secondary">THE CHALLENGE</h2>
+                <p className="text-base font-body text-muted-foreground leading-relaxed">
+                  {project.challenge}
+                </p>
+              </div>
+            )}
             
             {/* Solution */}
-            <div className="border border-primary/30 bg-card p-8 space-y-6">
-              <h2 className="text-3xl font-display text-primary">THE SOLUTION</h2>
-              <p className="text-base font-body text-foreground leading-relaxed">
-                {project.solution}
-              </p>
-            </div>
+            {project.solution && (
+              <div className="border border-primary/30 bg-card p-8 space-y-6">
+                <h2 className="text-3xl font-display text-primary">THE SOLUTION</h2>
+                <p className="text-base font-body text-foreground leading-relaxed">
+                  {project.solution}
+                </p>
+              </div>
+            )}
             
             {/* Technologies */}
-            <div className="space-y-6">
-              <h2 className="text-3xl font-display text-accent">TECHNOLOGIES</h2>
-              <div className="flex flex-wrap gap-3">
-                {project.technologies.map((tech, i) => (
-                  <div 
-                    key={i}
-                    className="border border-primary/30 bg-card px-4 py-2 hover:border-primary hover:bg-primary/10 transition-all duration-300"
-                  >
-                    <span className="text-sm font-subhead tracking-wider text-foreground">
-                      {tech}
-                    </span>
-                  </div>
-                ))}
+            {technologies.length > 0 && (
+              <div className="space-y-6">
+                <h2 className="text-3xl font-display text-accent">TECHNOLOGIES</h2>
+                <div className="flex flex-wrap gap-3">
+                  {technologies.map((tech, i) => (
+                    <div 
+                      key={i}
+                      className="border border-primary/30 bg-card px-4 py-2 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                    >
+                      <span className="text-sm font-subhead tracking-wider text-foreground">
+                        {tech}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Results */}
-            <div className="space-y-6">
-              <h2 className="text-3xl font-display text-accent">RESULTS & IMPACT</h2>
-              <div className="grid gap-4">
-                {project.results.map((result, i) => (
-                  <div 
-                    key={i}
-                    className="flex items-start gap-4 border-l-2 border-accent/50 pl-6 py-3 hover:border-accent transition-colors group"
-                  >
-                    <div className="w-8 h-8 border border-accent/50 bg-background flex items-center justify-center flex-shrink-0 group-hover:bg-accent/10 transition-colors">
-                      <span className="text-xs font-display text-accent">{i + 1}</span>
+            {results.length > 0 && (
+              <div className="space-y-6">
+                <h2 className="text-3xl font-display text-accent">RESULTS & IMPACT</h2>
+                <div className="grid gap-4">
+                  {results.map((result, i) => (
+                    <div 
+                      key={i}
+                      className="flex items-start gap-4 border-l-2 border-accent/50 pl-6 py-3 hover:border-accent transition-colors group"
+                    >
+                      <div className="w-8 h-8 border border-accent/50 bg-background flex items-center justify-center flex-shrink-0 group-hover:bg-accent/10 transition-colors">
+                        <span className="text-xs font-display text-accent">{i + 1}</span>
+                      </div>
+                      <p className="text-base font-body text-foreground leading-relaxed pt-1">
+                        {result}
+                      </p>
                     </div>
-                    <p className="text-base font-body text-foreground leading-relaxed pt-1">
-                      {result}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Download Section */}
             {project.downloadUrl && (
@@ -146,8 +174,7 @@ export default function ProjectDetail() {
                     size="lg"
                     className="font-subhead tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 border-2 border-primary neon-border flex-shrink-0"
                     onClick={() => {
-                      // In a real implementation, this would trigger a download
-                      window.open(project.downloadUrl, '_blank');
+                      window.open(project.downloadUrl!, '_blank');
                     }}
                   >
                     <Download className="w-5 h-5 mr-2" />
