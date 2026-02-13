@@ -183,3 +183,10 @@
 - [x] OpenAI API key configured via environment secrets (gitignored)
 - [x] Update project records in DB to use local image paths
 - [x] Verify site looks identical to before (all images loading, all pages working)
+
+## Oracle and Dev Environment Fix
+- [x] Diagnose why Oracle doesn't work in production browser (context mismatch + error swallowed)
+- [x] Diagnose why dev environment is broken (sandbox hibernation, not code issue)
+- [x] Fix root causes: updated _core/index.ts to use standalone context, added Oracle error handling
+- [x] Verify Oracle works in browser (tested successfully)
+- [x] Build:manus compiles successfully

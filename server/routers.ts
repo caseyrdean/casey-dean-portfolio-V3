@@ -369,25 +369,52 @@ export const appRouter = router({
         }));
         
         // Generate RAG response
-        const result = await generateRAGResponse(input.message, conversationHistory.slice(0, -1));
-        
-        const responseTimeMs = Date.now() - startTime;
-        
-        // Save Oracle response
-        await createMessage({
-          conversationId,
-          role: 'oracle',
-          content: result.response,
-          sourceChunkIds: JSON.stringify(result.sourceChunkIds || []),
-          hasKnowledge: result.hasKnowledge,
-          responseTimeMs,
-        });
-        
-        return {
-          response: result.response,
-          hasKnowledge: result.hasKnowledge,
-          responseTimeMs,
-        };
+        try {
+          const result = await generateRAGResponse(input.message, conversationHistory.slice(0, -1));
+          
+          const responseTimeMs = Date.now() - startTime;
+          
+          // Save Oracle response
+          await createMessage({
+            conversationId,
+            role: 'oracle',
+            content: result.response,
+            sourceChunkIds: JSON.stringify(result.sourceChunkIds || []),
+            hasKnowledge: result.hasKnowledge,
+            responseTimeMs,
+          });
+          
+          return {
+            response: result.response,
+            hasKnowledge: result.hasKnowledge,
+            responseTimeMs,
+          };
+        } catch (err: any) {
+          console.error('[Oracle] Error generating response:', err?.message || err);
+          // Return a graceful error response instead of crashing
+          const errorMsg = err?.message || 'Unknown error';
+          const responseTimeMs = Date.now() - startTime;
+          
+          // Save error as oracle response for debugging
+          const fallbackResponse = errorMsg.includes('OPENAI_API_KEY')
+            ? 'The Oracle cannot connect — OPENAI_API_KEY is not configured in the server environment.'
+            : errorMsg.includes('API key') || errorMsg.includes('401')
+            ? 'The Oracle\'s API key appears to be invalid. Please check the OPENAI_API_KEY.'
+            : 'The Oracle encountered an error processing your question. Please try again.';
+          
+          await createMessage({
+            conversationId,
+            role: 'oracle',
+            content: fallbackResponse,
+            responseTimeMs,
+          });
+          
+          return {
+            response: fallbackResponse,
+            hasKnowledge: false,
+            responseTimeMs,
+          };
+        }
       }),
 
     // Public: Get conversation history

@@ -1,11 +1,18 @@
+/**
+ * Server Entry Point - Used by Manus Published Environment
+ * 
+ * This file is the entry point for the Manus published build.
+ * It uses the standalone auth/context (not Manus OAuth) so the
+ * published site works identically to the dev environment.
+ */
+
 import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
-import { createContext } from "./context";
+import { createContext } from "../context";
 import { serveStatic, setupVite } from "./vite";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -33,9 +40,7 @@ async function startServer() {
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // OAuth callback under /api/oauth/callback
-  registerOAuthRoutes(app);
-  // tRPC API
+  // tRPC API - uses standalone auth context (JWT-based, no Manus OAuth)
   app.use(
     "/api/trpc",
     createExpressMiddleware({

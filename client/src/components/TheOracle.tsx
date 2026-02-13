@@ -225,8 +225,15 @@ export default function TheOracle() {
         const mysticalResponse = `The spirits have spoken. ${result.response}`;
         speakText(mysticalResponse);
       }
-    } catch (error) {
-      const errorMessage = "The mystical energies are disturbed... I cannot provide a reading at this moment. Please try again later.";
+    } catch (error: any) {
+      console.error('[Oracle Error]', error);
+      const detail = error?.message || error?.data?.message || '';
+      let errorMessage = "The mystical energies are disturbed... I cannot provide a reading at this moment. Please try again later.";
+      if (detail.includes('OPENAI_API_KEY')) {
+        errorMessage = "The Oracle's connection to the spirit realm is not configured. The OPENAI_API_KEY environment variable must be set.";
+      } else if (detail.includes('API key')) {
+        errorMessage = "The Oracle's API key appears to be invalid. Please check the OPENAI_API_KEY configuration.";
+      }
       setMessages(prev => {
         const newMessages = prev.filter(m => !m.isTyping);
         return [...newMessages, { 
