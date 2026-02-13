@@ -122,6 +122,34 @@ export const appRouter = router({
         return { steps, error: err.message, errorCode: err.code, errorType: err.constructor.name };
       }
     }),
+    // Full Oracle chat test - runs the exact same RAG pipeline as the chat mutation
+    oracleTestChat: publicProcedure.query(async () => {
+      const startTime = Date.now();
+      const testMessage = "What does Casey Dean do?";
+      const steps: Record<string, any> = { testMessage };
+      try {
+        // Step 1: generateRAGResponse (the exact function used by oracle.chat)
+        steps.callingGenerateRAG = true;
+        const result = await generateRAGResponse(testMessage, []);
+        steps.ragSuccess = true;
+        steps.responseLength = result.response.length;
+        steps.responsePreview = result.response.substring(0, 200);
+        steps.hasKnowledge = result.hasKnowledge;
+        steps.relevantChunksCount = result.relevantChunks.length;
+        steps.responseTimeMs = Date.now() - startTime;
+        return { steps, error: null, status: "ORACLE CHAT PIPELINE WORKING" };
+      } catch (err: any) {
+        steps.failedAt = Object.keys(steps).pop();
+        steps.responseTimeMs = Date.now() - startTime;
+        return { 
+          steps, 
+          error: err.message, 
+          errorStack: err.stack?.substring(0, 500),
+          errorCode: err.code, 
+          errorType: err.constructor.name 
+        };
+      }
+    }),
   }),
 
   // Authentication routes

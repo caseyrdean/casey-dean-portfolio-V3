@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, title, LENGTH(rawContent) as content_length FROM knowledge_documents;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 26oPSLF1JrHBkC1.root --database GS77b3TFJGdjuXRCHKnBPH --execute SELECT id, title, LENGTH(rawContent) as content_length FROM knowledge_documents;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "Casey Dean CSA",
+      "content_length": "4988"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcontent_length\n1\tCasey Dean CSA\t4988\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}
