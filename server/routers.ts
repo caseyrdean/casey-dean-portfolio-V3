@@ -65,6 +65,22 @@ export const appRouter = router({
         ? "S3 storage configured"
         : "Using database storage (S3 not configured). Files stored as data URLs.",
     })),
+    envDiagnostic: publicProcedure.query(() => {
+      const check = (key: string) => {
+        const val = process.env[key];
+        if (!val) return { set: false, preview: "NOT SET" };
+        return { set: true, preview: `${val.slice(0, 4)}...${val.slice(-4)} (${val.length} chars)` };
+      };
+      return {
+        nodeEnv: process.env.NODE_ENV || "NOT SET",
+        OPENAI_API_KEY: check("OPENAI_API_KEY"),
+        ADMIN_PASSWORD: { set: !!process.env.ADMIN_PASSWORD },
+        JWT_SECRET: { set: !!process.env.JWT_SECRET },
+        DATABASE_URL: { set: !!process.env.DATABASE_URL },
+        serverEntryPoint: "server/index.ts (standalone)",
+        dotenvLoaded: true,
+      };
+    }),
   }),
 
   // Authentication routes
